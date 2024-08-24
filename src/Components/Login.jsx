@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import {nightsky} from '../assets/imgexp.js'
 
 function Login() {
   const [signIn, setSignIn] = useState(true);
@@ -8,8 +9,14 @@ function Login() {
   };
 
   return (
-    <div className="h-screen w-full flex font-poppins justify-center items-center   bg-gradient-to-br from-[#1a1919] via-gray-800 to-slate-700">
-
+    <div className="h-screen w-full flex font-poppins justify-center items-center   bg-gradient-to-br from-[#1a1919] via-gray-800 to-slate-700"
+    style={{
+      backgroundImage: `url(${nightsky})`,
+      backgroundSize: 'cover', // or 'contain' depending on your needs
+      backgroundPosition: 'center',
+      width: '100%',
+      height: '100vh', // Set height to 100vh or as per your requirement
+    }}>
     
     <div className="min-h-auto w-screen  flex items-center justify-center">
       <div className="relative w-full max-w-4xl p-8 bg-transparent shadow-lg rounded-lg flex">
@@ -19,7 +26,7 @@ function Login() {
             signIn ? "translate-x-0" : "translate-x-full"
           }`}
         >
-          <div className="bg-gray-300 bg-opacity-10 border border-gray-100 backdrop-filter backdrop-blur-md  p-8 rounded-2xl  ">
+          <div className="bg-gray-300 bg-opacity-10 border border-gray-100 backdrop-filter backdrop-blur-sm  p-8 rounded-2xl  ">
 
           <h2 className="text-3xl text-white font-bold mb-4">
             {signIn ? "Sign In" : "Create Account"}
@@ -59,7 +66,7 @@ function Login() {
             signIn ? "translate-x-full" : "translate-x-0"
           }`}
         >
-          <div className="bg-gray-300 bg-opacity-10 border border-gray-100 backdrop-filter backdrop-blur-md  p-8 rounded-2xl ">
+          <div className="bg-gray-300 bg-opacity-10 border border-gray-100   p-8 rounded-2xl ">
 
           <h2 className="text-3xl font-bold mb-4">
             {signIn ? "Hello, Friend!" : "Welcome Back!"}
