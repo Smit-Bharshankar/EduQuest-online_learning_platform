@@ -1,0 +1,11 @@
+
+export { default as Logoblack } from './imgblack.png'
+export { default as Logowhite } from './imgwhite.png'
+export { default as Logosmall } from './headlogo.png'
+export { default as Logopurple } from './purplelogo.png'
+export { default as Logotext } from './logotextblack.png'
+export { default as Logotextnav } from './logotextnav.png'
+export { default as Imagefull } from './image-full.png'
+export { default as Imagebottom } from './image-bottom.png'
+export { default as whitetextLogo } from './whitetextlogo.png'
+export { default as startlearningimg } from './startlearning.png'
