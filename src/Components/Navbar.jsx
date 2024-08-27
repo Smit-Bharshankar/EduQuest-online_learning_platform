@@ -2,9 +2,30 @@ import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { HiMenu  , HiX} from "react-icons/hi";
 import { Logoblack , Logowhite , Logosmall , Logopurple , Logotext , Logotextnav , whitetextLogo } from '../assets/imgexp';
+import LogoutBtn from './LogoutBtn';
+import { useSelector , useDispatch } from 'react-redux';
+
 
 
 const Navbar = () => {
+
+  // checking user login status
+  const authStatus = useSelector((state) => state.auth.status )
+  const [showlogout , setShowLogout] = useState(true)
+  useEffect(() => {
+    
+    if (authStatus) {
+      setShowLogout(true);
+      
+    } else {
+      setShowLogout(false);
+      
+    }
+  }, [authStatus]); // Re-run this effect when authStatus changes
+
+  
+
+
 
   const [isOpen , setisOpen] = useState(false);
   const toggleMenu = () => {
@@ -69,14 +90,21 @@ const Navbar = () => {
           </NavLink>
         </li>
         <li className='mx-4 my-6 md:my-0'>
-          <NavLink to="/about" className='text-xl  hover:text-red-800 ration-500' onClick={toggleMenu}>
+          <NavLink to="/about" className='text-xl  hover:text-red-800 duration-500' onClick={toggleMenu}>
             About
           </NavLink>
         </li>
         <li className='mx-4 my-6 md:my-0'>
-          <NavLink to="/profile" className='text-xl  hover:text-red-800  duration-500' onClick={toggleMenu}>
-            Profile
+          {showlogout ? (
+            <div onClick={toggleMenu}>
+              <LogoutBtn/>
+            </div>
+          ) : (
+            <NavLink to="/login" className='text-xl px-2  bg-[#872346] rounded-md hover:text-[#6ee157] hover:bg-black duration-500' onClick={() => {toggleMenu();}}>
+            Sign-In
           </NavLink>
+          )}
+          
         </li>
         
       </ul>

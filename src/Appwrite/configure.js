@@ -26,7 +26,7 @@ export class Service {
                     userName: userName, // Store the userName
                     email: email, // Store the email
                     password: password, // Store the password (ensure it's hashed)
-                    DOB: dob // Store the date of birth (ensure it's in the correct DateTime format dd-mm-yyyy --:--:----)
+                    dob: dob // Store the date of birth (ensure it's in the correct DateTime format dd-mm-yyyy --:--:----)
                 }
             )
         } catch (error) {
@@ -183,15 +183,16 @@ export class Service {
         }
     }
 
-    async getLessonsByCourseId ({courseId}) {
+    async getLessonsByCourseId(courseId) {
         try {
-            return await this.databases.getDocument(
+            const response = await this.databases.listDocuments(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId_Lessons,
-                courseId,
-            )
+                [Query.equal("courseId", courseId)]
+            );
+            return response.documents;
         } catch (error) {
-            console.error("Appwrite configure :: getLessonByCourseId :: error", error);
+            console.error("Appwrite configure :: getLessonsByCourseId :: error", error);
             return false;
         }
     }

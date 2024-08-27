@@ -17,7 +17,7 @@ export class AuthService {
             const userAccount = await this.account.create(ID.unique() , email , password , name);
 
             if (userAccount) {
-                //call another method
+                //call another method , which will create a new account if not already created
                 return this.login({email,password});
             } else {
                 return userAccount;
@@ -58,4 +58,4 @@ export class AuthService {
 
 const authservice = new AuthService();
 
-export default AuthService
+export default authservice
