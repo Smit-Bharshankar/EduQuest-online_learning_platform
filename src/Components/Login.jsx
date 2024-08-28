@@ -103,9 +103,8 @@ function Login() {
                   className="w-full p-2 mb-4 border border-gray-300 rounded-lg"
                 />
                 <motion.button 
-                animate={{ x: [0, 100, 0] }}
-                whileTap={{ scale: 1.1 }} 
-                whileHover={{ scale: 0.9 }}
+                 whileHover={{ scale: 1.1 }} 
+                 whileTap={{ scale: 0.6 }}
                   type="submit"
                   className="w-full bg-[#6f1bf7] text-white py-2 rounded-lg transition  duration-300"
                 >
