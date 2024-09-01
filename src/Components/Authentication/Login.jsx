@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import { nightsky } from '../assets/imgexp.js';
-import { login as storeLogin } from "../store/authSlice.js";
-import authService from "../Appwrite/auth.js";
+import { nightsky } from '../../assets/imgexp.js';
+import { login as storeLogin } from "../../store/authSlice.js";
+import authService from "../../Appwrite/auth.js";
 import { motion } from "framer-motion";
 
 function Login() {
@@ -44,7 +44,7 @@ function Login() {
         const userData = await authService.getCurrentUser();
         if (userData) {
           dispatch(storeLogin(userData));
-          navigate("/");
+          navigate("/course");
         }
       }
     } catch (error) {

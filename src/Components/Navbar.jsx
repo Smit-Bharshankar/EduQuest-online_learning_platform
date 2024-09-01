@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { HiMenu  , HiX} from "react-icons/hi";
 import { Logoblack , Logowhite , Logosmall , Logopurple , Logotext , Logotextnav , whitetextLogo } from '../assets/imgexp';
-import LogoutBtn from './LogoutBtn';
+import LogoutBtn from '../Components/Authentication/LogoutBtn';
 import { useSelector , useDispatch } from 'react-redux';
 
 

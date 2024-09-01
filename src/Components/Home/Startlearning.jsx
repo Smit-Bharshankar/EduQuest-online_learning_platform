@@ -1,16 +1,10 @@
-import React , {useRef} from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { startlearningimg } from '../../assets/imgexp'
+import React from 'react'
 
 function Startlearning() {
-
-  
-
   return (
-    <>
-   
-     
-    </>
+    <div>
+      
+    </div>
   )
 }
 
