@@ -1,35 +1,18 @@
-import React, { useState , useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { nightsky } from '../../assets/imgexp.js';
+import { useDispatch } from "react-redux";
 import { login as storeLogin } from "../../store/authSlice.js";
 import authService from "../../Appwrite/auth.js";
+import { useNavigate } from "react-router-dom";
+import { nightsky } from "../../assets/imgexp.js";
 import { motion } from "framer-motion";
-import MobileLogin from "./MobileLogin.jsx";
 
-function Login() {
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 500); // Check initial screen width
+function MobileLogin() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { register, handleSubmit } = useForm();
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [signIn, setSignIn] = useState(true);
-
-  useEffect(() => {
-    // Update isMobile state on window resize
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 500);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  if (isMobile) {
-    // Render mobile login component if isMobile is true
-    return <MobileLogin />;
-  }
 
   const toggleForm = () => {
     setSignIn(!signIn);
@@ -37,7 +20,7 @@ function Login() {
 
   //// Login method
   const login = async (data) => {
-    setError('');
+    setError("");
     try {
       const session = await authService.login(data);
       if (session) {
@@ -52,9 +35,9 @@ function Login() {
     }
   };
 
-  ////  Sign up method
+  //// Sign up method
   const createAccount = async (data) => {
-    setError('');
+    setError("");
     try {
       const session = await authService.createAccount(data);
       if (session) {
@@ -70,23 +53,20 @@ function Login() {
   };
 
   return (
-    <div 
-      className="h-screen w-full flex font-poppins justify-center items-center bg-gradient-to-br from-[#1a1919] via-gray-800 to-slate-700"
-      style={{
-        backgroundImage: `url(${nightsky})`,
-        backgroundSize: 'cover', // or 'contain'
-        backgroundPosition: 'center',
-        width: '100%',
-        height: '100vh',
-      }}
-    >
-      <div className="min-h-auto w-screen flex items-center justify-center">
-        <div className="relative w-full max-w-4xl p-8 bg-transparent shadow-lg rounded-lg flex">
-          {/* Sign In/Up Forms */}
-          <div
-            className={`absolute inset-0 w-1/2 p-8 bg-transparent flex flex-col justify-center transition-transform duration-700 ${
-              signIn ? "translate-x-0" : "translate-x-full"
-            }`}
+   <>
+   <div 
+   className="h-screen w-full flex font-poppins justify-center items-center bg-gradient-to-br from-[#1a1919] via-gray-800 to-slate-700"
+   style={{
+     backgroundImage: `url(${nightsky})`,
+     backgroundSize: 'cover', // or 'contain'
+     backgroundPosition: 'center',
+     width: '100%',
+     height: '100vh',
+   }}>
+
+    <div className="">
+    <div
+            className={` inset-0 p-8 bg-transparent flex flex-col justify-center transition-transform duration-700 `}
           >
             <div className="bg-gray-300 bg-opacity-10 border border-gray-100 backdrop-filter backdrop-blur-sm p-8 rounded-2xl">
               <h2 className="text-3xl text-white font-bold mb-4">
@@ -132,11 +112,8 @@ function Login() {
             </div>
           </div>
 
-          {/* Overlay Panel */}
           <div
-            className={`absolute inset-0 w-1/2 right-0 p-8 bg-transparent text-white flex flex-col justify-center transition-transform duration-700 ${
-              signIn ? "translate-x-full" : "translate-x-0"
-            }`}
+            className={`inset-0  p-8 bg-transparent text-white flex flex-col justify-center transition-transform duration-700 `}
           >
             <div className="bg-gray-300 bg-opacity-10 border border-gray-100 p-8 rounded-2xl">
               <h2 className="text-3xl font-bold mb-4">
@@ -155,10 +132,11 @@ function Login() {
               </button>
             </div>
           </div>
-        </div>
-      </div>
+
     </div>
+   </div>
+   </>
   );
 }
 
-export default Login;
+export default MobileLogin;
