@@ -5,7 +5,7 @@ import { FaUserPlus , FaCertificate , FaPlayCircle , FaBookOpen } from "react-ic
 function HowItWorks() {
   return (
     <>
-          <div className='flex items-center justify-center max-h-full w-full pt-20 pb-8'>
+          <div className='flex md:flex-row flex-col items-center justify-center max-h-full w-full pt-20 pb-8'>
               <h1 className='text-4xl font-bold font-poppins text-slate-700'>Start Learning with </h1>
               <h2 className=' pl-2 text-4xl font-bold font-poppins text-black'>4 easy Steps</h2>
           </div>

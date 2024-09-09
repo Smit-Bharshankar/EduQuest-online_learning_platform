@@ -31,21 +31,21 @@ function MultilayerParallax() {
         style={{ y: textY }}
         className="font-bold text-[#ffffff] text-4xl text-center md:text-8xl mt-[5%] absolute z-10"
       >
-        Unlock Your Potential with Expert-Led Courses.
-        <h1 className="font-medium text-[#b9d0d0] text-xl pt-6 md:pt-10 md:text-4xl text-center">Explore a variety of courses designed to help you excel in your career.</h1>
+        Unlock Your Potential with Expert-Led Courses
+        <h1 className="font-medium text-[#b9d0d0] text-xl pt-6 md:pt-10 md:text-4xl text-center">Explore a variety of courses designed to help you excel in your career</h1>
        
         <motion.div className="flex flex-col gap-8 md:flex-row justify-center items-center">
           <NavLink to="/course">
             <motion.button animate={{ x: [0, 100, 0] }}
                       whileHover={{ scale: 1.1 }} 
                       whileTap={{ scale: 0.9 }} 
-                  className="from-cyan-500 to-blue-500 bg-gradient-to-r mt-8 md:p-4 p-2 rounded-2xl text-center text-xl md:text-3xl text-white ">
+                  className="from-[#3a3988] to-[#0b6f97] bg-gradient-to-r mt-8 md:p-4 p-2 rounded-2xl text-center text-xl md:text-3xl text-white ">
                     Explore Courses →
                 </motion.button>
           </NavLink>
           <NavLink to="/login">
           <motion.h1
-           className="text-white bg-[#441984] px-2.5 py-0.5 rounded-md mt-10 text-center text-xl md:text-2xl font-mono underline">
+           className="text-white bg-[#370b3f] px-2.5 py-0.5 rounded-md mt-10 text-center text-xl md:text-2xl font-mono underline">
             Sign Up
           </motion.h1>
           </NavLink>
