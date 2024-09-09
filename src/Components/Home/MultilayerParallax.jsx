@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { NavLink } from "react-router-dom";
+import { homesky , homeskydark } from "../../assets/imgexp";
 
 function MultilayerParallax() {
   const ref = useRef(null);
@@ -11,7 +12,7 @@ function MultilayerParallax() {
 
     // const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
-  // Adjusting the transform to a very narrow range to keep the text in place
+  // Adjusting the transform to a very narrow range to keep the text in place 
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "300%"]);
 
   return (
@@ -19,7 +20,7 @@ function MultilayerParallax() {
       ref={ref}
       className="w-full h-[90vh] bg-gradient-to-b from-black via-[#171421] to-[#292846] overflow-hidden relative  grid place-items-start"
       style={{
-        //backgroundImage: `url(https://images.pexels.com/photos/5537517/pexels-photo-5537517.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1)`,
+        backgroundImage: `url(${homesky})`,
         backgroundSize: 'cover', // or 'contain'
         backgroundPosition: 'center',
         width: '100%',

@@ -2,6 +2,7 @@ import React from 'react'
 import MultilayerParallax from './MultilayerParallax';
 import Startlearning from './Startlearning';
 import KeyFeature from './KeyFeature';
+import HowItWorks from './HowItWorks';
 
 function Home() {
 
@@ -20,6 +21,10 @@ function Home() {
 
       <div>
         <KeyFeature/>
+      </div>
+
+      <div>
+        <HowItWorks/>
       </div>
       {/* // variants , gesture animations , scroll triggred animations , scroll linked animations , shared layout animations , react router 6 page transactions */}
     </div>
