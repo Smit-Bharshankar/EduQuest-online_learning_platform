@@ -17,15 +17,23 @@ function MultilayerParallax() {
   return (
     <div
       ref={ref}
-      className="w-full h-[90vh] bg-gradient-to-b from-black via-[#1f1a2e] to-[#333157] overflow-hidden relative  grid place-items-start"
+      className="w-full h-[90vh] bg-gradient-to-b from-black via-[#171421] to-[#292846] overflow-hidden relative  grid place-items-start"
+      style={{
+        //backgroundImage: `url(https://images.pexels.com/photos/5537517/pexels-photo-5537517.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1)`,
+        backgroundSize: 'cover', // or 'contain'
+        backgroundPosition: 'center',
+        width: '100%',
+        height: '100vh',
+      }}
     >
       <motion.div
         style={{ y: textY }}
-        className="font-bold text-white text-4xl text-center md:text-8xl mt-[5%] absolute z-10"
+        className="font-bold text-[#ffffff] text-4xl text-center md:text-8xl mt-[5%] absolute z-10"
       >
         Unlock Your Potential with Expert-Led Courses.
         <h1 className="font-medium text-[#b9d0d0] text-xl pt-6 md:pt-10 md:text-4xl text-center">Explore a variety of courses designed to help you excel in your career.</h1>
-        <motion.div className="flex flex-col gap-6 md:flex-row justify-center items-center">
+       
+        <motion.div className="flex flex-col gap-8 md:flex-row justify-center items-center">
           <NavLink to="/course">
             <motion.button animate={{ x: [0, 100, 0] }}
                       whileHover={{ scale: 1.1 }} 
@@ -36,7 +44,7 @@ function MultilayerParallax() {
           </NavLink>
           <NavLink to="/login">
           <motion.h1
-           className="text-white p-6 mt-10 text-center text-xl md:text-2xl font-mono underline">
+           className="text-white bg-[#441984] px-2.5 py-0.5 rounded-md mt-10 text-center text-xl md:text-2xl font-mono underline">
             Sign Up
           </motion.h1>
           </NavLink>
