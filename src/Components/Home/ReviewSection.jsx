@@ -45,7 +45,7 @@ const ReviewSection = () => {
       <motion.div
         className="flex space-x-6"
         initial={{ x: 0 }}
-        animate={{ x: '-300%' }}
+        animate={{ x: '-200%' }}
         transition={{
           repeat: Infinity,
           duration: 25,
@@ -68,17 +68,15 @@ const ReviewSection = () => {
             </div>
             <p className="text-gray-600 mb-4 text-wrap text-center">{testimonial.review}</p>
             <div className="flex items-center mb-4">
-              {/* Dynamic Star Rating */}
-              {Array(Math.floor(testimonial.rating))
-                .fill(<FaStar className="text-yellow-500" />)
-                .concat(
-                  testimonial.rating % 1 ? (
-                    <FaStarHalfAlt className="text-yellow-500" />
-                  ) : (
-                    <FaRegStar className="text-yellow-500" />
-                  )
-                )}
-            </div>
+          {Array.from({ length: Math.floor(testimonial.rating) }).map((_, starIndex) => (
+            <FaStar key={`star-full-${index}-${starIndex}`} className="text-yellow-500" />
+          ))}
+          {testimonial.rating % 1 !== 0 ? (
+            <FaStarHalfAlt key={`star-half-${index}`} className="text-yellow-500" />
+          ) : (
+            <FaRegStar key={`star-empty-${index}`} className="text-yellow-500" />
+          )}
+        </div>
             <span className="text-gray-800 font-medium">- {testimonial.learnerName}</span>
           </div>
         ))}

@@ -2,6 +2,10 @@ import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { NavLink } from "react-router-dom";
 import { homesky , homeskydark } from "../../assets/imgexp";
+import { IoLogInOutline } from "react-icons/io5";
+import { FaSquareArrowUpRight } from "react-icons/fa6";
+
+
 
 function MultilayerParallax() {
   const ref = useRef(null);
@@ -21,10 +25,10 @@ function MultilayerParallax() {
       className="w-full h-[90vh] bg-gradient-to-b from-black via-[#171421] to-[#292846] overflow-hidden relative  grid place-items-start"
       style={{
         backgroundImage: `url(${homesky})`,
-        backgroundSize: 'cover', // or 'contain'
-        backgroundPosition: 'center',
-        width: '100%',
-        height: '100vh',
+        backgroundSize: "cover", // or 'contain'
+        backgroundPosition: "center",
+        width: "100%",
+        height: "100vh",
       }}
     >
       <motion.div
@@ -32,22 +36,37 @@ function MultilayerParallax() {
         className="font-bold text-[#ffffff] text-4xl text-center md:text-8xl mt-[5%] absolute z-10"
       >
         Unlock Your Potential with Expert-Led Courses
-        <h1 className="font-medium text-[#b9d0d0] text-xl pt-6 md:pt-10 md:text-4xl text-center">Explore a variety of courses designed to help you excel in your career</h1>
-       
-        <motion.div className="flex flex-col gap-8 md:flex-row justify-center items-center">
+        <h1 className="font-medium text-[#b9d0d0] text-xl pt-6 md:pt-10 md:text-4xl text-center">
+          Explore a variety of courses designed to help you excel in your career
+        </h1>
+        <motion.div className="flex flex-col md:flex-row justify-evenly items-center">
           <NavLink to="/course">
-            <motion.button animate={{ x: [0, 100, 0] }}
-                      whileHover={{ scale: 1.1 }} 
-                      whileTap={{ scale: 0.9 }} 
-                  className="from-[#3a3988] to-[#0b6f97] bg-gradient-to-r mt-8 md:p-4 p-2 rounded-2xl text-center text-xl md:text-3xl text-white ">
-                    Explore Courses →
-                </motion.button>
+            <motion.button
+              animate={{ x: [0, -100, 0], transition: { delay: 0.4 } }}
+              transition={{ duration: 0.4 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.9 }}
+              className="from-[#3a3988] to-[#0b6f97] bg-gradient-to-r mt-8 md:p-4 p-2 rounded-2xl text-center text-xl md:text-3xl text-white hover:to-[#3a3988] hover:from-[#0b6f97] hover:bg-gradient-to-r  "
+            >
+              <div className="flex flex-row gap-1">
+              Explore Courses <FaSquareArrowUpRight  className="text-4xl"/>
+              </div>
+            </motion.button>
           </NavLink>
           <NavLink to="/login">
-          <motion.h1
-           className="text-white bg-[#370b3f] px-2.5 py-0.5 rounded-md mt-10 text-center text-xl md:text-2xl font-mono underline">
-            Sign Up
-          </motion.h1>
+            <motion.h1
+              className="text-white bg-gradient-to-r from-purple-600 via-pink-500 to-red-400 px-5 py-2 rounded-lg mt-10 text-center text-2xl md:text-3xl font-extrabold shadow-lg transform transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-2xl"
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.4 }}
+              whileHover={{ scale: 1.1, rotate: 2 }}
+              whileTap={{ scale: 0.95, rotate: -2 }}
+            >
+              <div className="flex flex-row items-center justify-center gap-2">
+                Sign Up <IoLogInOutline className="text-2xl" />
+                </div>
+ 
+            </motion.h1>
           </NavLink>
         </motion.div>
       </motion.div>

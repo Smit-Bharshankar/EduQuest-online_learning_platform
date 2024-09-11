@@ -10,7 +10,7 @@ import Home from './Components/Home/Home';
 import Course from './Components/Courses/Course';
 import Login from './Components/Authentication/Login';
 import Profile from './Components/Profile';
-import About from './Components/About';
+import About from './Components/AboutUs/About';
 import LessonList from './Components/Courses/LessonList';
 import 'react-toastify/dist/ReactToastify.css';
 
