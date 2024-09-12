@@ -13,6 +13,7 @@ import Profile from './Components/Profile';
 import About from './Components/AboutUs/About';
 import LessonList from './Components/Courses/LessonList';
 import 'react-toastify/dist/ReactToastify.css';
+import ScrolltoTop from './ScrolltoTop'
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -66,8 +67,9 @@ function App() {
           padding: "8px", // Adjust padding to make it less intrusive
           color: '#050505',
           fontFamily:'poppins'
-        }}
-      />
+        }}  />
+
+        <ScrolltoTop />
       <Routes>
         {/* MainLayout as the parent route */}
         <Route path="/" element={<MainLayout />}>
