@@ -42,7 +42,7 @@ function Course() {
   }
 
   return (
-    <div className="flex flex-wrap justify-evenly items-center mt-12">
+    <div className="flex flex-wrap md:gap-0 gap-6 justify-evenly items-center mt-12">
       {courses.map((course) => (
         <CourseCard
           key={course.$id} // Assuming each course has a unique ID from Appwrite

@@ -61,8 +61,11 @@ function App() {
         pauseOnHover
         toastStyle={{
           maxWidth: '300px', // Set maximum width for the toast
+          borderRadius: '4px',
           fontSize: "0.875rem", // Adjust font size for a more compact message
           padding: "8px", // Adjust padding to make it less intrusive
+          color: '#050505',
+          fontFamily:'poppins'
         }}
       />
       <Routes>
