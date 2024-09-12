@@ -61,7 +61,7 @@ const LessonList = () => {
         <div className="w-full flex justify-center items-center">
           <iframe
             className="w-full h-[200px] md:h-[400px] lg:w-[900px] lg:h-[600px]"
-            src={`https://www.youtube.com/embed/${lessons[currentLessonIndex].videoId}`}  
+            src={lessons[currentLessonIndex].videoUrl}  
             title="YouTube video player"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             referrerPolicy="strict-origin-when-cross-origin"
