@@ -25,6 +25,7 @@ export class AuthService {
 
         } catch (error) {
             console.log("Appwrite service :: createAccount :: error" , error);
+            throw new Error(error.message || "An error occurred. Please try again.");
         }
     }
 
@@ -32,7 +33,8 @@ export class AuthService {
         try {
             return await this.account.createEmailPasswordSession(email,password);
         } catch (error) {
-            console.log("Appwrite service :: login :: error" , error);   
+            console.log("Appwrite service :: login :: error" , error); 
+            throw new Error(error.message || "An error occurred. Please try again.");  
         }
     }
 

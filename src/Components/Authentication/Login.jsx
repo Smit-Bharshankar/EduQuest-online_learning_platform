@@ -48,7 +48,11 @@ function Login() {
         }
       }
     } catch (error) {
-      setError(error.message);
+      if (error.code === 401) {
+        setError("Incorrect ID or Password");
+      } else {
+        setError(error.message || "An error occurred. Please try again.");
+      }
     }
   };
 
@@ -65,7 +69,11 @@ function Login() {
         }
       }
     } catch (error) {
-      setError(error.message);
+      if (error.code === 409) {
+        setError("Account already exists with this email.");
+      } else {
+        setError(error.message || "An error occurred. Please try again.");
+      }
     }
   };
 
@@ -120,7 +128,7 @@ function Login() {
                   className="w-full p-2 mb-4 border border-gray-300 rounded-lg"
                 />
                 <motion.button 
-                 whileHover={{ scale: 1.1 }} 
+                 whileHover={{ scale: 1.03 }} 
                  whileTap={{ scale: 0.6 }}
                   type="submit"
                   className="w-full bg-[#6f1bf7] text-white py-2 rounded-lg transition  duration-300"

@@ -31,7 +31,11 @@ function MobileLogin() {
         }
       }
     } catch (error) {
-      setError(error.message);
+      if (error.code === 401) {
+        setError("Incorrect ID or Password");
+      } else {
+        setError(error.message || "An error occurred. Please try again.");
+      }
     }
   };
 
@@ -48,7 +52,11 @@ function MobileLogin() {
         }
       }
     } catch (error) {
-      setError(error.message);
+      if (error.code === 409) {
+        setError("Account already exists with this email.");
+      } else {
+        setError(error.message || "An error occurred. Please try again.");
+      }
     }
   };
 
