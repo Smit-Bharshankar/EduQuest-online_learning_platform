@@ -48,9 +48,10 @@ function Course() {
           key={course.$id} // Assuming each course has a unique ID from Appwrite
           title={course.title}
           description={course.description}
-          date={course.createdAt}
+          date={course.$createdAt}
           courseId={course.$id}
-          thumbnailUrl={course.courseThumbnail} // Adjust based on your data structure
+          thumbnailUrl={course.thumbnail} // Adjust based on your data structure
+          instructor = {course.instructor}
         />
       ))}
     </div>

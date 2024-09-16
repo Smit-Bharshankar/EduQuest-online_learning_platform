@@ -95,7 +95,7 @@ const LessonList = () => {
 <div className="my-6 px-4 lg:px-0">
   <p className="font-bold text-lg lg:text-xl mb-2">Description:</p>
   <p className="w-full lg:w-[70%] text-base text-gray-600">
-    {lessons[currentLessonIndex].content}
+    {lessons[currentLessonIndex].description}
   </p>
 </div>
 

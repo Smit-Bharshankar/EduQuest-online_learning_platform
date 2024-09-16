@@ -79,19 +79,20 @@ export class Service {
 
     // Course-Related Methods
 
-    async createCourse({ title , description , instructor , createdAt}) {
+    async createCourse({ title , description , instructor , category=null , thumbnail}) {
         try {
             return await this.databases.createDocument(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId_Courses,
-                ID.unique,
+                ID.unique(),
                 {
-                    courseId: ID.unique,
+                    courseId: ID.unique(),
                     title: title,
                     description: description,
                     instructor:instructor,
-                    createdAt:createdAt,
-                    updatedAt:createdAt
+                    category:category,
+                    thumbnail:thumbnail,
+                    
                 }
             )
         } catch (error) {
@@ -114,7 +115,7 @@ export class Service {
         }
     }
 
-    async updateCourse({courseId , title , description , instructor , updatedAt}) {
+    async updateCourse({courseId , title , description , instructor , category=null , thumbnail}) {
         try {
             return await this.databases.updateDocument(
                 conf.appwriteDatabaseId,
@@ -124,7 +125,9 @@ export class Service {
                     title: title,
                     description: description,
                     instructor:instructor,
-                    updatedAt:updatedAt,
+                    category:category,
+                    thumbnail:thumbnail,
+                    
                 }
             )
         } catch (error) {
@@ -183,12 +186,12 @@ export class Service {
         }
     }
 
-    async getLessonsByCourseId(courseId) {
+    async getLessonsByCourseId(courseID) {
         try {
             const response = await this.databases.listDocuments(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId_Lessons,
-                [Query.equal("courseId", courseId)]
+                [Query.equal("courseID", courseID)]
             );
             return response.documents;
         } catch (error) {
