@@ -15,18 +15,20 @@ export class Service {
     }
         // User-Related Methods
 
-    async createUserDocument({userName , email , password , dob}) {
+    async createUserDocument({userName , email , password , dob , contact ,profileImgId}) {
         try {
             return await this.databases.createDocument(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId_Users,
                 ID.unique(),
                 {
-                    userId: ID.unique(), // You can use ID.unique() to generate a unique userId
-                    userName: userName, // Store the userName
+                    userID: ID.unique(), // You can use ID.unique() to generate a unique userId
+                    userName:userName , // Store the userName
                     email: email, // Store the email
                     password: password, // Store the password (ensure it's hashed)
-                    dob: dob // Store the date of birth (ensure it's in the correct DateTime format dd-mm-yyyy --:--:----)
+                    birthDate: dob ,// Store the date of birth (ensure it's in the correct DateTime format dd-mm-yyyy --:--:----)
+                    contact: contact ,
+                    profilePicture: profileImgId ,
                 }
             )
         } catch (error) {
@@ -498,6 +500,44 @@ export class Service {
 
 
     // file upload 4:16
+
+    async uploadFile (file) {
+        try {
+            return await this.storage.createFile(
+                conf.appwriteBucketId,
+                ID.unique(),
+                file
+            )
+        } catch (error) {
+            console.log("Appwrite service :: uploadFile :: error " , error)
+            return false
+        }
+    }
+
+    async deleteFile (fileID) {
+        try {
+             await this.storage.deleteFile(
+                conf.appwriteBucketId,
+                fileID
+            )
+            return true
+        } catch (error) {
+            console.log("Appwrite service :: deleteFile :: error " , error)
+            return false
+        }
+    }
+
+    async getFilePreview (fileID) {
+        try {
+            return this.storage.getFilePreview(
+                conf.appwriteBucketId,
+                fileID
+            )
+        } catch (error) {
+            console.log("Appwrite service :: getFilePreview :: error " , error)
+            return false
+        }
+    }
 }
 
 const service = new Service();

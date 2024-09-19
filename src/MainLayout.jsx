@@ -7,7 +7,7 @@ function MainLayout() {
   return (
     <div className="min-h-[100vh] flex flex-col">
       <Navbar />
-      <div className="flex-grow mb-12"> {/* This ensures the content grows and the footer stays at the bottom */}
+      <div className="flex-grow"> {/* This ensures the content grows and the footer stays at the bottom */}
         <Outlet /> {/* This will render the Home component by default */}
       </div>
       <Footer />

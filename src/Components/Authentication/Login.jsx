@@ -7,6 +7,7 @@ import { login as storeLogin } from "../../store/authSlice.js";
 import authService from "../../Appwrite/auth.js";
 import { motion } from "framer-motion";
 import MobileLogin from "./MobileLogin.jsx";
+import { toast } from "react-toastify";
 
 function Login() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 500); // Check initial screen width
@@ -44,14 +45,15 @@ function Login() {
         const userData = await authService.getCurrentUser();
         if (userData) {
           dispatch(storeLogin(userData));
-          navigate("/");
+          toast.success("Login Successful!");
+          navigate(-1);
         }
       }
     } catch (error) {
       if (error.code === 401) {
         setError("Incorrect ID or Password");
       } else {
-        setError(error.message || "An error occurred. Please try again.");
+        setError(error.message || "An error occurred. Please try again."); 
       }
     }
   };
@@ -65,7 +67,8 @@ function Login() {
         const userData = await authService.getCurrentUser();
         if (userData) {
           dispatch(storeLogin(userData));
-          navigate("/course");
+          toast.success("Sign-Up Successful!");
+          navigate(-1);
         }
       }
     } catch (error) {

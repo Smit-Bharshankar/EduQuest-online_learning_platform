@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import service from '../../Appwrite/configure';
 import { useParams } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
+import './description.css'
+
 
 const LessonList = () => {
     const { courseId } = useParams();
@@ -92,12 +95,15 @@ const LessonList = () => {
     </ul>
   </div>
 </div>
-<div className="my-6 px-4 lg:px-0">
+<div className="my-6 lg:px-4 px-1">
   <p className="font-bold text-lg lg:text-xl mb-2">Description:</p>
-  <p className="w-full lg:w-[70%] text-base text-gray-600">
-    {lessons[currentLessonIndex].description}
-  </p>
+  <div className="description">
+    <ReactMarkdown>{lessons[currentLessonIndex].description}</ReactMarkdown>
+  </div>
 </div>
+
+
+
 
 
 

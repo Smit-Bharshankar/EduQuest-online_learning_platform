@@ -95,6 +95,11 @@ const Navbar = () => {
           </NavLink>
         </li>
         <li className='mx-4 my-6 md:my-0'>
+          <NavLink to="/profile" className='text-xl  hover:text-red-800 duration-500' onClick={toggleMenu}>
+            Profile
+          </NavLink>
+        </li>
+        <li className='mx-4 my-6 md:my-0'>
           {showlogout ? (
             <div onClick={toggleMenu}>
               <LogoutBtn/>

@@ -1,0 +1,54 @@
+.description {
+    width: 100%;
+    max-width: 90%; /* Restrict width on larger screens */
+    margin: 0 auto; /* Center the description text */
+    font-size: 1rem; /* Base font size */
+    color: #282e36; /* Tailwind's text-gray-600 equivalent */
+  }
+  
+  .description p {
+    margin-bottom: 1rem; /* Add spacing after paragraphs */
+    line-height: 1.6; /* Improve readability */
+  }
+  
+  .description h1,
+  .description h2,
+  .description h3 {
+    margin-top: 1.5rem; /* Space above headings */
+    margin-bottom: 1rem; /* Space below headings */
+    font-weight: bold; /* Make headings stand out */
+    color: #1f2937; /* Tailwind's text-gray-800 equivalent */
+  }
+  
+  .description ul,
+  .description ol {
+    margin-bottom: 1.5rem; /* Space after lists */
+    padding-left: 1.5rem; /* Indent lists */
+  }
+  
+  .description li {
+    margin-bottom: 0.5rem; /* Space between list items */
+  }
+  
+  .description blockquote {
+    border-left: 4px solid #d1d5db; /* Tailwind's border-gray-300 */
+    padding-left: 1rem; /* Indent the blockquote */
+    margin-bottom: 1.5rem;
+    font-style: italic;
+    color: #6b7280; /* Tailwind's text-gray-500 equivalent */
+  }
+  
+  .description code {
+    background-color: #f3f4f6; /* Tailwind's bg-gray-100 */
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    font-size: 0.9rem;
+    color: #9ca3af; /* Tailwind's text-gray-400 equivalent */
+  }
+  
+  @media (min-width: 1024px) {
+    .description {
+      font-size: 1.125rem; /* Increase font size for larger screens */
+    }
+  }
+  

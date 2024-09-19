@@ -13,6 +13,7 @@ function LogoutBtn() {
     try {
       await authservice.logout(); // Wait for logout to complete
       dispatch(logout());
+      dispatch(clearProfile());
       toast.success("Logout Successful!"); // Display success message
       navigate('/'); // Navigate to homepage
     } catch (error) {

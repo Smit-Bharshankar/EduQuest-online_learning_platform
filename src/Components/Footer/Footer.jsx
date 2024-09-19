@@ -5,11 +5,11 @@ import { FaXTwitter,FaFacebookF,FaInstagram,FaYoutube } from "react-icons/fa6";
 
 const Footer = () => {
   return (
-    <footer className="relative left-0 bottom-0 right-0 pb-5 bg-gray-900 text-white font-poppins mt-[20%]  w-full">
+    <footer className="relative left-0 bottom-0 right-0 pb-5 pt-6 bg-gray-900 text-white font-poppins w-full">
       <div className="container mx-auto max-w-4xl px-4">
         {/* Article Section */}
-        <article className="flex flex-col md:flex-row items-center justify-between mx-auto mt-[-90px] mb-2 min-h-[140px] w-auto p-5 md:p-7 rounded-lg bg-purple-700 text-center">
-          <h1 className="text-lg font-light text-white/90 mb-4 md:mb-0">
+        <article className="flex flex-col md:flex-row items-center justify-between mx-4 mb-2 min-h-[140px] w-auto p-5 md:p-7 rounded-lg bg-purple-700 text-center">
+          <h1 className="text-lg md:text-2xl font-light text-white/90 mb-2 md:mb-0">
             Try for Free Today
           </h1>
           <button className="flex items-center gap-2 px-6 py-2 bg-gray-900 text-white rounded-full">
