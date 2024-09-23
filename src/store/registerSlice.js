@@ -9,7 +9,7 @@ const registerSlice = createSlice({
     name: 'register',
     initialState,
     reducers: {
-        register: (state, action) => {
+        userRegister: (state, action) => {
             state.isRegistered = true;
             state.profileInfo = action.payload.profileInfo;
         },
@@ -20,5 +20,5 @@ const registerSlice = createSlice({
     },
 });
 
-export const { register, clearProfile } = registerSlice.actions;
+export const { userRegister, clearProfile } = registerSlice.actions;
 export default registerSlice.reducer;

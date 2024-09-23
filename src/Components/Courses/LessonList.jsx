@@ -2,10 +2,22 @@ import React, { useEffect, useState } from 'react';
 import service from '../../Appwrite/configure';
 import { useParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
+import Comments from '../Comments/Comments';
 import './description.css'
 
 
 const LessonList = () => {
+
+  //comment && description toggle:
+  const [showComments , setShowComments] = useState(false)
+  const handleCommentDisplay = () => {
+    setShowComments(true)
+  }
+  const handleDescriptionDisplay = () => {
+    setShowComments(false)
+  }
+
+
     const { courseId } = useParams();
 
     const [lessons, setLessons] = useState([]);
@@ -95,12 +107,42 @@ const LessonList = () => {
     </ul>
   </div>
 </div>
-<div className="my-6 lg:px-4 px-1">
+
+
+<div className='w-full text-start border border-t-4 border-gray-600 text-xl '>
+  <div className='pl-6 flex flex-row bg-red-100 gap-8 py-2'>
+
+  <div 
+  onClick={handleDescriptionDisplay}
+  className='bg-green-700 cursor-pointer shadow-md shadow-slate-600 rounded-lg py-1 px-3'>
+    Description:
+     
+  </div>
+  <div 
+  onClick={handleCommentDisplay}
+  className='bg-teal-700 cursor-pointer shadow-md shadow-slate-600 rounded-lg py-1 px-3'>
+    Comments:
+    
+  </div>
+  
+  </div>
+  <div>
+      {!showComments && <div className="my-6 lg:px-4 px-1">
   <p className="font-bold text-lg lg:text-xl mb-2">Description:</p>
   <div className="description">
     <ReactMarkdown>{lessons[currentLessonIndex].description}</ReactMarkdown>
-  </div>
-</div>
+  </div> 
+</div>} 
+    </div>
+
+    <div>
+      {showComments && <div className="my-6 lg:px-4 px-1">
+  <p className="font-bold text-lg lg:text-xl mb-2">Comments:</p>
+    <Comments />
+  </div> } 
+</div> 
+    </div>
+
 
 
 

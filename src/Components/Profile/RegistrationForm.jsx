@@ -1,64 +1,107 @@
 import React , {useState , useEffect} from 'react'
-import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from "react-redux";
+import { useDispatch , useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import { register } from '../../store/registerSlice';
+import { userRegister} from '../../store/registerSlice';
 import service from '../../Appwrite/configure';
+import { toast } from "react-toastify";
+
 
 function RegistrationForm() {
     
     const dispatch = useDispatch()
     const navigate = useNavigate();
-    const { register, handleSubmit } = useForm();
+    const { register, handleSubmit , reset } = useForm();
     const [error, setError] = useState('');
-    // const authStatus = useSelector((state) => state.auth.status);
-    // const { isRegistered, profileInfo } = useSelector((state) => state.register);
+    const [isLoading, setIsLoading] = useState(false);
+    const authStatus = useSelector((state) => state.auth.status);
+    const { isRegistered, profileInfo } = useSelector((state) => state.register);
 
-    // // useEffect(() => {
-    // //     if (authStatus) {
-    // //       SetForwardtoSignin(false);
-    // //     } else {
-    // //       SetForwardtoSignin(true);
-    // //     }
-    // //   }, [authStatus]);
+    // useEffect(() => {
+    //     if (authStatus) {
+    //       SetForwardtoSignin(false);
+    //     } else {
+    //       SetForwardtoSignin(true);
+    //     }
+    //   }, [authStatus]);
 
     const registerUser = async (data) => {
-        const { firstName, lastName, email, password, dob, contact, profileimg } = data;
-        setError('')
-      
-        try {
+      setIsLoading(true); // Set loading state to true
+      const { firstName, lastName, email, password, dob, contact, profileimg } = data;
+      setError(''); // Clear any previous error
+      const intcontact = parseInt(contact, 10);
+  
+      try {
+          // File size validation (file should be less than 2MB)
+          if (profileimg[0].size > 2 * 1024 * 1024) {
+              throw new Error('File size should be less than 2 MB');
+          }
+  
+          // Check if dob is a valid date
+          if (!dob) {
+              throw new Error("Date of Birth is required.");
+          }
+  
+          // Parse and format dob to include time
+          const formattedDob = new Date(`${dob}T00:00:00.000Z`); // Append time to the date
+          if (isNaN(formattedDob)) {
+              throw new Error("Invalid Date of Birth format. Please provide a valid date.");
+          }
+  
+          const formattedDobISOString = formattedDob.toISOString(); // Convert to ISO format (yyyy-mm-dd hh:mm:ss.000)
+  
           // Upload profile image file
           const uploadedFile = await service.uploadFile(profileimg[0]);
-          const userName = firstName + ' ' + lastName
-      
-          if (!uploadedFile) {
-            throw new Error("File upload failed");
+          console.log('Uploaded file:', uploadedFile); // Check the uploaded file response
+  
+          if (!uploadedFile || !uploadedFile.$id) {
+              throw new Error("File upload failed");
           }
-      
+  
+          const userName = `${firstName} ${lastName}`;
+  
           // Create user document
           const newUser = await service.createUserDocument({
-            userName,
-            email,
-            password,
-            dob,
-            contact,
-            profileImgId: uploadedFile.$id // Store the uploaded file ID in the user profile
+              userName,
+              email,
+              password,
+              dob: formattedDobISOString,
+              contact: intcontact,
+              profileImgId: uploadedFile.$id, // Store the uploaded file ID in the user profile
           });
-      
+  
+          console.log('New user:', newUser); // Check the new user response
+  
           if (newUser) {
-            console.log("User registered successfully:", newUser);
-            dispatch(register(data));
-            toast.success("Profile Created Successfully!");
-            navigate(-1)
+              console.log("User registered successfully:", newUser);
+              dispatch(userRegister({
+                  profileInfo: {
+                      userName,
+                      email,
+                      dob: formattedDobISOString, // Save the formatted DOB
+                      contact: intcontact,
+                      profileImgId: uploadedFile.$id
+                  }
+              }));
+              toast.success("Profile Created Successfully!");
+              reset();
+              navigate(-1); // Navigate back after success
           } else {
-            throw new Error("User registration failed");
+              throw new Error("User registration failed");
           }
-        } catch (error) {
-          console.log("Error in registerUser:", error);
-          setError("Registration failed. Please try again.");
-        }
-      };
+  
+      } catch (error) {
+          console.error("Error in registerUser:", error);
+          setError("Registration failed: " + error.message); // Correct error setting
+      }finally {
+        setIsLoading(false); // Set loading state to false
+    }
+  };
+  
+  
+  
+      
+      
       
 
   return (
@@ -140,7 +183,7 @@ function RegistrationForm() {
                 type="date"
                 placeholder="d.o.b"
                 autoComplete="on"
-                {...register('d.o.b', { required: true })}
+                {...register('dob', { required: true })}
                 className="w-full md:w-[40%] p-2 text-white/50 bg-white/10 border border-gray-300 rounded-lg"
             />
         </div>
@@ -180,11 +223,12 @@ function RegistrationForm() {
    
    <div className='w-full flex items-center justify-center py-3 md:py-6'>
    <button
-        type="submit"
-        className="w-[40%] bg-[#6f1bf7] text-white text-xl py-2 rounded-lg transition duration-300 hover:bg-[#5a0ed7]"
-        >
-        Create Profile
-    </button>
+    type="submit"
+    className="w-[40%] bg-[#6f1bf7] text-white text-xl py-2 rounded-lg transition duration-300 hover:bg-[#5a0ed7]"
+    disabled={isLoading}
+>
+    {isLoading ? 'Creating Profile...' : 'Create Profile'}
+</button>
     </div> 
 
     {error && <p className="text-red-600 text-center font-mono text-sm mt-4">{error}</p>}

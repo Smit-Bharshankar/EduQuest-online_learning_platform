@@ -10,12 +10,25 @@ export class Service {
         this.client
             .setEndpoint(conf.appwriteURL)
             .setProject(conf.appwriteProjectId)
+        this.account = new Account(this.client);
         this.databases = new Databases(this.client);
         this.storage = new Storage(this.client);
     }
         // User-Related Methods
 
     async createUserDocument({userName , email , password , dob , contact ,profileImgId}) {
+
+        function formatDate() {
+            const now = new Date();
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+            const year = String(now.getFullYear()).slice(-2); // Last two digits of the year
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+        
+            return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+        }
         try {
             return await this.databases.createDocument(
                 conf.appwriteDatabaseId,
@@ -23,17 +36,19 @@ export class Service {
                 ID.unique(),
                 {
                     userID: ID.unique(), // You can use ID.unique() to generate a unique userId
-                    userName:userName , // Store the userName
+                    userName: userName , // Store the userName
                     email: email, // Store the email
                     password: password, // Store the password (ensure it's hashed)
                     birthDate: dob ,// Store the date of birth (ensure it's in the correct DateTime format dd-mm-yyyy --:--:----)
                     contact: contact ,
                     profilePicture: profileImgId ,
+                    createdAt: formatDate(),
+                    updatedAt: formatDate(),
                 }
             )
         } catch (error) {
             console.log("Appwrite configure :: createUserDocument :: error" , error);
-            return false;
+            return error;
         }
     }
 
@@ -42,23 +57,45 @@ export class Service {
             const response = await this.databases.listDocuments(
                 conf.appwriteDatabaseId, // Your Database ID
                 conf.appwriteCollectionId_Users, // Your Collection ID
-                [
-                    Query.equal('email', email)
-                ]
+                [Query.equal('email', email)]
             );
     
             if (response.documents.length > 0) {
-                const document = response.documents[0];
-                return document.$id;
+                // Return the first document (assuming email is unique)
+                return response.documents[0].$id;
             } else {
-                console.log("No document found with the given email.");
+                console.log(`No document found for email: ${email}`);
                 return null;
             }
         } catch (error) {
-            console.log("Appwrite configure :: findUserByEmail :: error", error);
-            return false;
+            console.error("Error fetching user by email:", error);
+            throw new Error("Failed to find user by email");
         }
     }
+    
+
+    async findUserById(userID) {
+        try {
+            const response = await this.databases.listDocuments(
+                conf.appwriteDatabaseId, // Your Database ID
+                conf.appwriteCollectionId_Users, // Your Collection ID
+                [Query.equal('$id', userID)]
+            );
+    
+            if (response.documents.length > 0) {
+                // Return the user document
+                return response.documents[0];
+            } else {
+                console.log(`No user found for ID: ${userID}`);
+                return null;
+            }
+        } catch (error) {
+            console.error("Error fetching user by ID:", error);
+            throw new Error("Failed to find user by ID");
+        }
+    }
+    
+    
 
     async updateUserDocument({ documentId, userName, email, password, dob }) {
         try {
@@ -527,15 +564,16 @@ export class Service {
         }
     }
 
-    async getFilePreview (fileID) {
+    async getProfilePic(fileID) {
         try {
-            return this.storage.getFilePreview(
+            const fileView = await this.storage.getFileView(
                 conf.appwriteBucketId,
                 fileID
-            )
+            );
+            return fileView;  // This should return the file URL
         } catch (error) {
-            console.log("Appwrite service :: getFilePreview :: error " , error)
-            return false
+            console.log("Appwrite service :: getProfilePic :: error ", error);
+            return false;
         }
     }
 }
