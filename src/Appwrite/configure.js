@@ -570,7 +570,11 @@ export class Service {
                 conf.appwriteBucketId,
                 fileID
             );
-            return fileView;  // This should return the file URL
+            // Check if fileView has the expected URL structure
+            if (fileView && fileView.href) {
+                return fileView.href;  // Return the file URL
+            }
+            return false;  // In case fileView is empty or doesn't have href
         } catch (error) {
             console.log("Appwrite service :: getProfilePic :: error ", error);
             return false;

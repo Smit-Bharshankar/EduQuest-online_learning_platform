@@ -23,19 +23,20 @@ function Profile() {
       }
   
       try {
-        const userData = await service.findUserByEmail(userEmail);
+        const userId = await service.findUserByEmail(userEmail);
+        const userData = await service.findUserById(userId);
   
         // Log userData to verify its content
         console.log("Fetched user data:", userData);
   
         if (userData) {
           // Destructure the fields and log them to check for null/undefined values
-          const { userName, email, password, dob: birthDate, contact, profileImgId: profilePicture } = userData;
+          const { userName, email, password, dob: birthDate, contact, profilePicture } = userData;
           
           console.log("Profile Picture ID:", profilePicture);
   
           if (!profilePicture) {
-            console.warn("profileImgId is missing in user data");
+            console.log("profileImgId is missing in user data");
           }
   
           setUser(userData);
@@ -43,19 +44,19 @@ function Profile() {
           // Dispatch user registration with profile info
           dispatch(
             userRegister({
-              profileInfo: {
-                userName,
-                email,
-                password,
-                dob: birthDate, // Save the formatted DOB
-                contact,
-                profileImgId: profilePicture,
-              },
+                profileInfo: {
+                    userName,
+                    email,
+                    password,
+                    dob: birthDate,
+                    contact,
+                    profilePicture, // Use profilePicture here
+                },
             })
-          );
+        );
         } else {
           setError('User data not found.');
-        }
+        };
       } catch (error) {
         setError('Error fetching user data');
       } finally {

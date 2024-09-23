@@ -86,7 +86,7 @@ function Dashboard() {
             {/* Info Section */}
             <div className="mt-8 sm:mt-0 text-center sm:text-right">
               <h2 className="text-xl font-semibold text-gray-800">
-                P.E.S College of Engineering
+                P.E.S Modern College of Engineering
               </h2>
               <h3 className="mt-2 text-gray-600">Skills:</h3>
               <div className="flex justify-center sm:justify-end gap-3 mt-3">
