@@ -4,9 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import service from '../../Appwrite/configure';
 import Dashboard from './Dashboard'; // Corrected typo in "Dashboard"
 import { userRegister } from '../../store/registerSlice';
+import { useNavigate } from 'react-router-dom';
 
 function Profile() {
   const dispatch = useDispatch(); // Initialize dispatch
+  const navigate = useNavigate();
   const userRegistered = useSelector((state) => state.register.isRegistered);
   const userEmail = useSelector((state) => state.auth.userData?.email);
   const [showRegisterForm, setShowRegisterForm] = useState(false);
@@ -19,6 +21,7 @@ function Profile() {
       if (!userEmail) {
         setLoading(false);
         setError('User is not logged in.');
+        navigate('/login')
         return;
       }
   
@@ -56,6 +59,7 @@ function Profile() {
         );
         } else {
           setError('User data not found.');
+          setShowRegisterForm(true)
         };
       } catch (error) {
         setError('Error fetching user data');
@@ -69,7 +73,7 @@ function Profile() {
    // Added dispatch to dependencies
 
   useEffect(() => {
-    if (userRegistered || !user) {
+    if (userRegistered) {
       setShowRegisterForm(false);
     } else {
       setShowRegisterForm(true);
@@ -85,6 +89,9 @@ function Profile() {
       </div>
     );
   }
+  if (showRegisterForm) {
+    return <RegistrationForm />;
+  }
 
   if (error) {
     return (
@@ -94,9 +101,7 @@ function Profile() {
     );
   }
 
-  if (showRegisterForm) {
-    return <RegistrationForm />;
-  }
+  
 
   return <Dashboard />;
 }

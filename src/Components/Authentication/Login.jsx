@@ -1,20 +1,27 @@
-import React, { useState , useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import { nightsky } from '../../assets/imgexp.js';
+import { nightsky } from "../../assets/imgexp.js";
 import { login as storeLogin } from "../../store/authSlice.js";
 import authService from "../../Appwrite/auth.js";
 import { motion } from "framer-motion";
 import MobileLogin from "./MobileLogin.jsx";
 import { toast } from "react-toastify";
+import { FaRegEye , FaRegEyeSlash } from "react-icons/fa6";
+
 
 function Login() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 500); // Check initial screen width
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { register, handleSubmit } = useForm();
-  const [error, setError] = useState('');
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const [error, setError] = useState("");
   const [signIn, setSignIn] = useState(true);
 
   useEffect(() => {
@@ -36,9 +43,13 @@ function Login() {
     setSignIn(!signIn);
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   //// Login method
   const login = async (data) => {
-    setError('');
+    setError("");
     try {
       const session = await authService.login(data);
       if (session) {
@@ -53,14 +64,14 @@ function Login() {
       if (error.code === 401) {
         setError("Incorrect ID or Password");
       } else {
-        setError(error.message || "An error occurred. Please try again."); 
+        setError(error.message || "An error occurred. Please try again.");
       }
     }
   };
 
   ////  Sign up method
   const createAccount = async (data) => {
-    setError('');
+    setError("");
     try {
       const session = await authService.createAccount(data);
       if (session) {
@@ -81,14 +92,14 @@ function Login() {
   };
 
   return (
-    <div 
+    <div
       className="h-screen w-full flex font-poppins justify-center items-center bg-gradient-to-br from-[#1a1919] via-gray-800 to-slate-700"
       style={{
         backgroundImage: `url(${nightsky})`,
-        backgroundSize: 'cover', // or 'contain'
-        backgroundPosition: 'center',
-        width: '100%',
-        height: '100vh',
+        backgroundSize: "cover", // or 'contain'
+        backgroundPosition: "center",
+        width: "100%",
+        height: "100vh",
       }}
     >
       <div className="min-h-auto w-screen flex items-center justify-center">
@@ -104,41 +115,98 @@ function Login() {
                 {signIn ? "Sign In" : "Create Account"}
               </h2>
 
-              <form className="w-full" onSubmit={handleSubmit(signIn ? login : createAccount)}>
+              <form
+                className="w-full"
+                onSubmit={handleSubmit(signIn ? login : createAccount)}
+              >
                 {!signIn && (
-                  <input
-                    type="text"
-                    label="name"
-                    placeholder="Name"
-                    {...register('name', { required: true })}
-                    className="w-full p-2 mb-4 border border-gray-300 rounded-lg"
-                  />
+                  <>
+                    <input
+                      type="text"
+                      label="name"
+                      placeholder="Name"
+                      {...register("name", {
+                        required: "Name is required",
+                        validate: {
+                          matchPattern: (value) =>
+                            /^[a-zA-Z ]{2,30}$/.test(value) ||
+                            "Name must contain only letters and spaces, and be 2-30 characters long",
+                        },
+                      })}
+                      className="w-full p-2 mb-4 border border-gray-300 rounded-lg"
+                    />
+                    {errors.name && (
+                      <p className="text-red-600 text-sm">
+                        {errors.name.message}
+                      </p>
+                    )}
+                  </>
                 )}
+
                 <input
                   type="email"
                   label="email"
                   placeholder="Email"
                   autoComplete="on"
-                  {...register('email', { required: true })}
+                  {...register("email", {
+                    required: true,
+                    validate: {
+                      matchPattern: (value) =>
+                        /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(
+                          value
+                        ) || "Email address must be a valid address",
+                    },
+                  })}
                   className="w-full p-2 mb-4 border border-gray-300 rounded-lg"
                 />
+                {errors.email && (
+                  <p className="text-red-600 text-sm">{errors.email.message}</p>
+                )}
+
+                <div className="flex">
+
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   label="password"
                   placeholder="Password"
                   autoComplete="on"
-                  {...register('password', { required: true })}
+                  {...register("password", {
+                    required: "Password is required",
+                    validate: {
+                      matchPattern: (value) =>
+                        /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(value) ||
+                      "Password must be at least 8 characters long and include both letters and numbers",
+                    },
+                  })}
                   className="w-full p-2 mb-4 border border-gray-300 rounded-lg"
-                />
-                <motion.button 
-                 whileHover={{ scale: 1.03 }} 
-                 whileTap={{ scale: 0.6 }}
+                  />
+                 <span
+          onClick={togglePasswordVisibility}
+          className=" absolute right-8 text-xl p-3 cursor-pointer bg-transparent"
+          >
+          {showPassword ? <FaRegEyeSlash /> : <FaRegEye /> } {/* Using emojis for the eye icon, you can replace with an icon */}
+        </span>
+        </div>
+                {errors.password && (
+                  <p className="text-red-600 text-sm">
+                    {errors.password.message}
+                  </p>
+                )}
+
+                <motion.button
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.6 }}
                   type="submit"
-                  className="w-full bg-[#6f1bf7] text-white py-2 rounded-lg transition  duration-300"
+                  className="w-full bg-[#6f1bf7] text-white py-2 rounded-lg transition duration-300"
                 >
                   {signIn ? "Sign In" : "Sign Up"}
                 </motion.button>
-                {error && <p className="text-red-600 text-center font-mono text-sm mt-4">{error}</p>}
+
+                {error && (
+                  <p className="text-red-600 text-center font-mono text-sm mt-4">
+                    {error}
+                  </p>
+                )}
               </form>
             </div>
           </div>
