@@ -14,7 +14,7 @@ function RegistrationForm() {
     const { register, handleSubmit , reset } = useForm();
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const authStatus = useSelector((state) => state.auth.status);
+    const userData = useSelector((state) => state.auth.userData);
     const { isRegistered, profileInfo } = useSelector((state) => state.register);
 
     // useEffect(() => {
@@ -27,7 +27,7 @@ function RegistrationForm() {
 
     const registerUser = async (data) => {
       setIsLoading(true); // Set loading state to true
-      const { firstName, lastName, email, password, dob, contact, profileimg } = data;
+      const { firstName, lastName, email, location, dob, contact, profileimg } = data;
       setError(''); // Clear any previous error
       const intcontact = parseInt(contact, 10);
   
@@ -64,7 +64,7 @@ function RegistrationForm() {
           const newUser = await service.createUserDocument({
               userName,
               email,
-              password,
+              location,
               dob: formattedDobISOString,
               contact: intcontact,
               profileImgId: uploadedFile.$id, // Store the uploaded file ID in the user profile
@@ -78,6 +78,7 @@ function RegistrationForm() {
                   profileInfo: {
                       userName,
                       email,
+                      location,
                       dob: formattedDobISOString, // Save the formatted DOB
                       contact: intcontact,
                       profileImgId: uploadedFile.$id
@@ -153,23 +154,25 @@ function RegistrationForm() {
         <div className="flex flex-col md:flex-row gap-4 w-full">
             <input
                 type="email"
+                value={userData.email}
+                readOnly
                 placeholder="Email"
                 autoComplete="on"
                 {...register('email', { required: true })}
-                className="w-full p-2 bg-white/10 border border-gray-300 rounded-lg"
+                className="w-full p-2 bg-white/10 border border-gray-300 opacity-75 cursor-not-allowed rounded-lg"
             />
         </div>
     </div>
 {/* /// */}
     <div className="flex flex-col md:flex-row bg-slate-50 bg-opacity-10 rounded-lg p-4 gap-4 mb-4">
-        <h1 className="text-lg text-white md:w-[20%] font-semibold">Password :</h1>
+        <h1 className="text-lg text-white md:w-[20%] font-semibold">Location :</h1>
 
         <div className="flex flex-col md:flex-row gap-4 w-full">
             <input
-                type="password"
-                placeholder="Password"
+                type="text"
+                placeholder="Location"
                 autoComplete="on"
-                {...register('password', { required: true })}
+                {...register('location', { required: true })}
                 className="w-full p-2 bg-white/10 border border-gray-300 rounded-lg"
             />
         </div>

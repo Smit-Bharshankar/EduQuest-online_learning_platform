@@ -6,16 +6,24 @@ import authService from "../../Appwrite/auth.js";
 import { useNavigate } from "react-router-dom";
 import { nightsky } from "../../assets/imgexp.js";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import { FaRegEye , FaRegEyeSlash } from "react-icons/fa6";
 
 function MobileLogin() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit,formState: { errors },} = useForm();  
   const [error, setError] = useState("");
   const [signIn, setSignIn] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+
 
   const toggleForm = () => {
     setSignIn(!signIn);
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   //// Login method
@@ -27,7 +35,8 @@ function MobileLogin() {
         const userData = await authService.getCurrentUser();
         if (userData) {
           dispatch(storeLogin(userData));
-          navigate("/");
+          toast.success("Login Successful!");
+          navigate(-1);
         }
       }
     } catch (error) {
@@ -48,7 +57,8 @@ function MobileLogin() {
         const userData = await authService.getCurrentUser();
         if (userData) {
           dispatch(storeLogin(userData));
-          navigate("/course");
+          toast.success("Sign-Up Successful!");
+          navigate("/");
         }
       }
     } catch (error) {
@@ -68,8 +78,8 @@ function MobileLogin() {
      backgroundImage: `url(${nightsky})`,
      backgroundSize: 'cover', // or 'contain'
      backgroundPosition: 'center',
-     width: '100%',
-     height: '100vh',
+    //  width: '100%',
+    //  height: '100vh',
    }}>
 
     <div className="">
@@ -81,41 +91,98 @@ function MobileLogin() {
                 {signIn ? "Sign In" : "Create Account"}
               </h2>
 
-              <form className="w-full" onSubmit={handleSubmit(signIn ? login : createAccount)}>
+              <form
+                className="w-full"
+                onSubmit={handleSubmit(signIn ? login : createAccount)}
+              >
                 {!signIn && (
-                  <input
-                    type="text"
-                    label="name"
-                    placeholder="Name"
-                    {...register('name', { required: true })}
-                    className="w-full p-2 mb-4 border border-gray-300 rounded-lg"
-                  />
+                  <>
+                    <input
+                      type="text"
+                      label="name"
+                      placeholder="Name"
+                      {...register("name", {
+                        required: "Name is required",
+                        validate: {
+                          matchPattern: (value) =>
+                            /^[a-zA-Z ]{2,30}$/.test(value) ||
+                            "Name must contain only letters and spaces, and be 2-30 characters long",
+                        },
+                      })}
+                      className="w-full p-2 mb-4 border border-gray-300 rounded-lg"
+                    />
+                    {errors.name && (
+                      <p className="text-red-600 text-sm">
+                        {errors.name.message}
+                      </p>
+                    )}
+                  </>
                 )}
+
                 <input
                   type="email"
                   label="email"
                   placeholder="Email"
                   autoComplete="on"
-                  {...register('email', { required: true })}
+                  {...register("email", {
+                    required: true,
+                    validate: {
+                      matchPattern: (value) =>
+                        /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(
+                          value
+                        ) || "Email address must be a valid address",
+                    },
+                  })}
                   className="w-full p-2 mb-4 border border-gray-300 rounded-lg"
                 />
+                {errors.email && (
+                  <p className="text-red-600 text-sm">{errors.email.message}</p>
+                )}
+
+                <div className=" relative flex">
+
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   label="password"
                   placeholder="Password"
                   autoComplete="on"
-                  {...register('password', { required: true })}
+                  {...register("password", {
+                    required: "Password is required",
+                    validate: {
+                      matchPattern: (value) =>
+                        /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(value) ||
+                      "Password must be at least 8 characters long and include both letters and numbers",
+                    },
+                  })}
                   className="w-full p-2 mb-4 border border-gray-300 rounded-lg"
-                />
-                <motion.button 
-                 whileHover={{ scale: 1.1 }} 
-                 whileTap={{ scale: 0.6 }}
+                  />
+                 <span
+          onClick={togglePasswordVisibility}
+          className=" absolute right-1 text-xl p-3 cursor-pointer opacity-65 bg-transparent"
+          >
+          {showPassword ? <FaRegEyeSlash /> : <FaRegEye /> } 
+        </span>
+        </div>
+                {errors.password && (
+                  <p className="text-red-600 text-sm">
+                    {errors.password.message}
+                  </p>
+                )}
+
+                <motion.button
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.6 }}
                   type="submit"
-                  className="w-full bg-[#6f1bf7] text-white py-2 rounded-lg transition  duration-300"
+                  className="w-full bg-[#6f1bf7] text-white py-2 rounded-lg transition duration-300"
                 >
                   {signIn ? "Sign In" : "Sign Up"}
                 </motion.button>
-                {error && <p className="text-red-600 text-center font-mono text-sm mt-4">{error}</p>}
+
+                {error && (
+                  <p className="text-red-600 text-center font-mono text-sm mt-4">
+                    {error}
+                  </p>
+                )}
               </form>
             </div>
           </div>

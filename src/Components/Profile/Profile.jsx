@@ -21,6 +21,7 @@ function Profile() {
       if (!userEmail) {
         setLoading(false);
         setError('User is not logged in.');
+        toast.info("Login to view Profile")
         navigate('/login')
         return;
       }
@@ -34,7 +35,7 @@ function Profile() {
   
         if (userData) {
           // Destructure the fields and log them to check for null/undefined values
-          const { userName, email, password, dob: birthDate, contact, profilePicture } = userData;
+          const { userID , userName, email, location, dob: birthDate, contact, profilePicture } = userData;
           
           console.log("Profile Picture ID:", profilePicture);
   
@@ -48,9 +49,10 @@ function Profile() {
           dispatch(
             userRegister({
                 profileInfo: {
+                  userID,
                     userName,
                     email,
-                    password,
+                    location,
                     dob: birthDate,
                     contact,
                     profilePicture, // Use profilePicture here
@@ -89,6 +91,7 @@ function Profile() {
       </div>
     );
   }
+
   if (showRegisterForm) {
     return <RegistrationForm />;
   }

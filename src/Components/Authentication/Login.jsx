@@ -8,19 +8,16 @@ import authService from "../../Appwrite/auth.js";
 import { motion } from "framer-motion";
 import MobileLogin from "./MobileLogin.jsx";
 import { toast } from "react-toastify";
-import { FaRegEye , FaRegEyeSlash } from "react-icons/fa6";
-
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 
 function Login() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 500); // Check initial screen width
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+
+  const { register, handleSubmit, formState: { errors },} = useForm();  
+
   const [error, setError] = useState("");
   const [signIn, setSignIn] = useState(true);
 
@@ -79,7 +76,7 @@ function Login() {
         if (userData) {
           dispatch(storeLogin(userData));
           toast.success("Sign-Up Successful!");
-          navigate(-1);
+          navigate("/");
         }
       }
     } catch (error) {
@@ -98,8 +95,8 @@ function Login() {
         backgroundImage: `url(${nightsky})`,
         backgroundSize: "cover", // or 'contain'
         backgroundPosition: "center",
-        width: "100%",
-        height: "100vh",
+        // width: "100%",
+        // height: "100vh",
       }}
     >
       <div className="min-h-auto w-screen flex items-center justify-center">
@@ -163,30 +160,31 @@ function Login() {
                   <p className="text-red-600 text-sm">{errors.email.message}</p>
                 )}
 
-                <div className="flex">
-
-                <input
-                  type={showPassword ? "text" : "password"}
-                  label="password"
-                  placeholder="Password"
-                  autoComplete="on"
-                  {...register("password", {
-                    required: "Password is required",
-                    validate: {
-                      matchPattern: (value) =>
-                        /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(value) ||
-                      "Password must be at least 8 characters long and include both letters and numbers",
-                    },
-                  })}
-                  className="w-full p-2 mb-4 border border-gray-300 rounded-lg"
+                <div className=" relative flex">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    label="password"
+                    placeholder="Password"
+                    autoComplete="on"
+                    {...register("password", {
+                      required: "Password is required",
+                      validate: {
+                        matchPattern: (value) =>
+                          /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(
+                            value
+                          ) ||
+                          "Password must be at least 8 characters long and include both letters and numbers",
+                      },
+                    })}
+                    className="w-full p-2 mb-4 border border-gray-300 rounded-lg"
                   />
-                 <span
-          onClick={togglePasswordVisibility}
-          className=" absolute right-8 text-xl p-3 cursor-pointer bg-transparent"
-          >
-          {showPassword ? <FaRegEyeSlash /> : <FaRegEye /> } {/* Using emojis for the eye icon, you can replace with an icon */}
-        </span>
-        </div>
+                  <span
+                    onClick={togglePasswordVisibility}
+                    className=" absolute right-1 text-xl p-3 cursor-pointer opacity-65 bg-transparent"
+                  >
+                    {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}{" "}
+                  </span>
+                </div>
                 {errors.password && (
                   <p className="text-red-600 text-sm">
                     {errors.password.message}

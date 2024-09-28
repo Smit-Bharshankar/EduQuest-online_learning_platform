@@ -16,7 +16,7 @@ export class Service {
     }
         // User-Related Methods
 
-    async createUserDocument({userName , email , password , dob , contact ,profileImgId}) {
+    async createUserDocument({userName , email , location , dob , contact ,profileImgId}) {
 
         function formatDate() {
             const now = new Date();
@@ -38,7 +38,7 @@ export class Service {
                     userID: ID.unique(), // You can use ID.unique() to generate a unique userId
                     userName: userName , // Store the userName
                     email: email, // Store the email
-                    password: password, // Store the password (ensure it's hashed)
+                    location: location, // Store the location 
                     birthDate: dob ,// Store the date of birth (ensure it's in the correct DateTime format dd-mm-yyyy --:--:----)
                     contact: contact ,
                     profilePicture: profileImgId ,
@@ -390,23 +390,42 @@ export class Service {
 
     // Comment-Related Methods
 
-    async createComment({doubtId , userId , comment , timestamp}) {
+    async createComment({courseID , userID , comment}) {
         try {
             return await this.databases.createDocument(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId_Comments,
                 ID.unique,
                 {
-                    commentId: ID.unique,
-                    doubtId: doubtId,
-                    userId: userId,
+                    commentID: ID.unique,
+                    courseID: courseID,
+                    userID: userID,
                     comment: comment,
-                    timestamp: timestamp
+                    
                 }
             )
         } catch (error) {
             console.error("Appwrite configure :: createComment :: error", error);
             return false;
+        }
+    }
+
+    async getCommentsByCourseId(courseID) {
+        try {
+            console.log("Course ID:", courseID);
+            
+            // Ensure courseID is correctly formatted as a string
+            const response = await this.databases.listDocuments(
+                conf.appwriteDatabaseId,
+                conf.appwriteCollectionId_Comments,
+                [Query.equal("courseID", courseID)] // Ensure courseID matches the stored value
+            );
+    
+            console.log("Comments response:", response); // Log the response
+            return response.documents; // Return the documents array
+        } catch (error) {
+            console.error("Appwrite configure :: listComments :: error", error);
+            return false; // Handle error appropriately
         }
     }
 

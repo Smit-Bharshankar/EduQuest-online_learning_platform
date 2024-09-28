@@ -4,6 +4,8 @@ import service from '../../Appwrite/configure';
 
 function Dashboard() {
   const userInfo = useSelector((state) => state.register.profileInfo);
+  const userRegistered = useSelector((state) => state.register.isRegistered);
+
   const [error, setError] = useState(null);
   const [userProfilePic, setUserProfilePic] = useState(null);
 
@@ -27,11 +29,15 @@ function Dashboard() {
         setError(error.message || 'Error fetching profile picture');
       }
     }
+    setTimeout(() => {
+      setError(''); // Hide error after 3 seconds
+    }, 3000);
 
     fetchProfilePic();
-  }, [userInfo]);
+  }, [userInfo , userRegistered]);
 
   return (
+    <>
     <div className="w-full min-h-screen bg-gradient-to-tl to-gray-200 from-gray-400 flex items-center justify-center">
       <div className="max-w-5xl w-full bg-white rounded-lg shadow-2xl overflow-hidden">
         {/* Cover Image */}
@@ -106,9 +112,10 @@ function Dashboard() {
             </div>
           </div>
         </div>
-        {error && <p className="text-red-500 text-center mt-4">{error}</p>}
+    {error && <p className="text-red-500 text-center mt-4">{error}</p>}
       </div>
     </div>
+        </>
   );
 }
 

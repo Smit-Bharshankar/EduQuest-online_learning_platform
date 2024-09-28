@@ -138,7 +138,7 @@ const LessonList = () => {
     <div>
       {showComments && <div className="my-6 lg:px-4 px-1">
   <p className="font-bold text-lg lg:text-xl mb-2">Comments:</p>
-    <Comments />
+    <Comments courseId={courseId} />
   </div> } 
 </div> 
     </div>
