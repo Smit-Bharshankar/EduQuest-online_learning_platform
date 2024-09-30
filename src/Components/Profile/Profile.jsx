@@ -35,7 +35,7 @@ function Profile() {
   
         if (userData) {
           // Destructure the fields and log them to check for null/undefined values
-          const { userID , userName, email, location, dob: birthDate, contact, profilePicture } = userData;
+          const {$id , userID , userName, email, location, dob: birthDate, contact, profilePicture } = userData;
           
           console.log("Profile Picture ID:", profilePicture);
   
@@ -49,7 +49,8 @@ function Profile() {
           dispatch(
             userRegister({
                 profileInfo: {
-                  userID,
+                  $id : $id,
+                  userID: userId,
                     userName,
                     email,
                     location,
@@ -59,6 +60,7 @@ function Profile() {
                 },
             })
         );
+
         } else {
           setError('User data not found.');
           setShowRegisterForm(true)

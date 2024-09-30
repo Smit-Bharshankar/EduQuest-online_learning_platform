@@ -1,17 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
+import service from "../../Appwrite/configure";
 
-const CommentForm = () => {
+const CommentForm = ({userID , courseID , userName}) => {
   const { register, handleSubmit, reset } = useForm();
   const [isTextarea, setIsTextarea] = useState(false); // Manage textarea visibility
+  const [error , setError] = useState('');
 
+  console.log('comment details: ', courseID , userID )
   // Handle the comment submission
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
+    setError('')
     console.log("Comment submitted:", data.comment);
-    reset();
+  
+    try {
+      await service.createComment({
+        userID: userID,
+        courseID: courseID,
+        comment: data.comment,
+      });
+    } catch (error) {
+      console.error("Error submitting comment:", error);
+      setError('Error submitting comment', error);
+    }
+  
+    reset(); // Reset the form after submission
     setIsTextarea(false); // Collapse textarea after submit
   };
+  
+
+  
 
   // Adjust the textarea height dynamically
   const adjustTextareaHeight = (e) => {
@@ -31,11 +50,11 @@ const CommentForm = () => {
           {/* Profile Picture Placeholder */}
           <div className="flex-shrink-0 flex flex-row items-center gap-6 pb-4">
             <img
-              src="https://via.placeholder.com/40"
+              src="https://static.vecteezy.com/system/resources/thumbnails/030/504/836/small_2x/avatar-account-flat-isolated-on-transparent-background-for-graphic-and-web-design-default-social-media-profile-photo-symbol-profile-and-people-silhouette-user-icon-vector.jpg"
               alt="profile"
               className="rounded-full w-10 h-10"
             />
-            <h1>UserName</h1>
+            <h1>{userName}</h1>
           </div>
 
           {/* Comment Input/Area */}
@@ -68,7 +87,13 @@ const CommentForm = () => {
 
           
         </div>
+        
       </form>
+      {error && (
+                      <p className="text-red-600 text-sm">
+                        {error}
+                      </p>
+                    )}
     </div>
   );
 };

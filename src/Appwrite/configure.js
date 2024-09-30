@@ -395,9 +395,9 @@ export class Service {
             return await this.databases.createDocument(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId_Comments,
-                ID.unique,
+                ID.unique(),
                 {
-                    commentID: ID.unique,
+                    commentID: ID.unique(),
                     courseID: courseID,
                     userID: userID,
                     comment: comment,

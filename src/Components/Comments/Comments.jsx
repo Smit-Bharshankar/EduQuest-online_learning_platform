@@ -5,7 +5,8 @@ import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 
 function Comments({ courseId }) {
-  const userID = useSelector((state) => state.auth.userData?.userID);
+  const userID = useSelector((state) => state.register.profileInfo?.$id);
+  const userName = useSelector((state) => state.register.profileInfo?.userName);
   const userRegistered = useSelector((state) => state.register.isRegistered);
   const [showcomment , setshowComment] = useState(true);
 
@@ -76,35 +77,41 @@ function Comments({ courseId }) {
 
   return (
     <div>
-      <div className="pb-6">
-        <CommentForm userId={userID} courseID={courseId} />
-      </div>
-      <div>
-        {comments.length > 0 ? (
-          <div>
-            <div className='w-full max-w-[95%]'>
-              {comments.map((comment) => (
-                <div key={comment.userID.id}>
-                  <div className='flex flex-row gap-3 items-center'>
-                  <img
-              src="https://via.placeholder.com/40"
-              alt="profile"
-              className="rounded-full w-10 h-10"
-            />
-                  <h2>{comment.userID.userName}</h2>
-                  </div>
-                  <div className='py-3 pl-6'>
-                  <p className='bg-gray-100 text-base font-medium px-4 py-2 border border-gray-200 rounded-lg'>{comment.comment}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <p>No comments available.</p>
-        )}
-      </div>
+    <div className="pb-6">
+      <CommentForm userID={userID} courseID={courseId} userName={userName}/>
     </div>
+    <div>
+      {comments.length > 0 ? (
+        <div>
+          <div className="w-full max-w-[95%]">
+            {comments.map((comment, index) => (
+              <div key={index}>
+                <div className="flex flex-row gap-3 items-center">
+                  {/* User profile picture */}
+                  <img
+                    src="https://static.vecteezy.com/system/resources/thumbnails/030/504/836/small_2x/avatar-account-flat-isolated-on-transparent-background-for-graphic-and-web-design-default-social-media-profile-photo-symbol-profile-and-people-silhouette-user-icon-vector.jpg"
+                    alt="profile"
+                    className="rounded-full w-10 h-10"
+                  />
+                  {/* User name */}
+                  <h2>{comment.userID?.userName || "Unknown User"}</h2>
+                </div>
+                <div className="py-3 pl-6">
+                  {/* Comment content */}
+                  <p className="bg-gray-100 text-base font-medium px-4 py-2 border border-gray-200 rounded-lg">
+                    {comment.comment}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <p>No comments available.</p>
+      )}
+    </div>
+  </div>
+  
   );
 }
 

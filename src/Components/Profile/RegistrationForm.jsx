@@ -216,7 +216,7 @@ function RegistrationForm() {
                 type="file"
                 placeholder="profile img"
                 autoComplete="on"
-                {...register('profileimg', { required: true })}
+                {...register('profileimg')}
                 className="w-full text-white p-2 bg-white/10 border border-gray-300 rounded-lg"
                 />
         </div>
