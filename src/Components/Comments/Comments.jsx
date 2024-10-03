@@ -89,9 +89,10 @@ function Comments({ courseId }) {
                 <div className="flex flex-row gap-3 items-center">
                   {/* User profile picture */}
                   <img
-                    src="https://static.vecteezy.com/system/resources/thumbnails/030/504/836/small_2x/avatar-account-flat-isolated-on-transparent-background-for-graphic-and-web-design-default-social-media-profile-photo-symbol-profile-and-people-silhouette-user-icon-vector.jpg"
+                  src={service.getProfilePic(comment.userID?.profilePicture)}
+                    // src="https://static.vecteezy.com/system/resources/thumbnails/030/504/836/small_2x/avatar-account-flat-isolated-on-transparent-background-for-graphic-and-web-design-default-social-media-profile-photo-symbol-profile-and-people-silhouette-user-icon-vector.jpg"
                     alt="profile"
-                    className="rounded-full w-10 h-10"
+                    className=" object-cover rounded-full w-10 h-10"
                   />
                   {/* User name */}
                   <h2>{comment.userID?.userName || "Unknown User"}</h2>

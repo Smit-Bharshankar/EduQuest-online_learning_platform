@@ -2,13 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
 import service from "../../Appwrite/configure";
+import { useSelector } from "react-redux";
 
 const CommentForm = ({userID , courseID , userName}) => {
   const { register, handleSubmit, reset } = useForm();
   const [isTextarea, setIsTextarea] = useState(false); // Manage textarea visibility
   const [error , setError] = useState('');
 
-  console.log('comment details: ', courseID , userID )
+  const userImg = useSelector((state) => state.register.profilePicUrl);
+
+  console.log('comment details: ', courseID , userID , userName )
   // Handle the comment submission
   const onSubmit = async (data) => {
     setError('')
@@ -50,9 +53,10 @@ const CommentForm = ({userID , courseID , userName}) => {
           {/* Profile Picture Placeholder */}
           <div className="flex-shrink-0 flex flex-row items-center gap-6 pb-4">
             <img
-              src="https://static.vecteezy.com/system/resources/thumbnails/030/504/836/small_2x/avatar-account-flat-isolated-on-transparent-background-for-graphic-and-web-design-default-social-media-profile-photo-symbol-profile-and-people-silhouette-user-icon-vector.jpg"
+              src={userImg}
+              //  src="https://static.vecteezy.com/system/resources/thumbnails/030/504/836/small_2x/avatar-account-flat-isolated-on-transparent-background-for-graphic-and-web-design-default-social-media-profile-photo-symbol-profile-and-people-silhouette-user-icon-vector.jpg"
               alt="profile"
-              className="rounded-full w-10 h-10"
+              className=" object-cover rounded-full w-10 h-10"
             />
             <h1>{userName}</h1>
           </div>

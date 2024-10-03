@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import service from '../../Appwrite/configure';
+import { userRegister } from '../../store/registerSlice';
+import { setProfilePicUrl } from '../../store/registerSlice';  // Import the action
 
 function Dashboard() {
+  const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.register.profileInfo);
   const userRegistered = useSelector((state) => state.register.isRegistered);
 
@@ -14,16 +17,17 @@ function Dashboard() {
       setError('');
       if (!userInfo) {
         setError("User Info not found")
-      } if (!userInfo.profileImgId) {
+      } if (!userInfo.profilePicture) {
         setError('profileImgId is missing')
       }
 
       try {
-        const profilePicUrl = await service.getProfilePic(userInfo.profileImgId);  // Use the new method here
+        const profilePicUrl = await service.getProfilePic(userInfo.profilePicture);  // Use the new method here
         if (!profilePicUrl) {
           throw new Error('Profile Picture not found');
         }
         setUserProfilePic(profilePicUrl);  // This should be the URL for the profile picture
+        dispatch(setProfilePicUrl(profilePicUrl));
       } catch (error) {
         console.error('Error while fetching profile picture:', error);
         setError(error.message || 'Error fetching profile picture');

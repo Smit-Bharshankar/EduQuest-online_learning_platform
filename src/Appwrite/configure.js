@@ -583,9 +583,9 @@ export class Service {
         }
     }
 
-    async getProfilePic(fileID) {
+    getProfilePic(fileID) {
         try {
-            const fileView = await this.storage.getFileView(
+            const fileView =  this.storage.getFileView(
                 conf.appwriteBucketId,
                 fileID
             );

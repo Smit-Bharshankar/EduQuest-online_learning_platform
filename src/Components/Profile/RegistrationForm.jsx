@@ -11,7 +11,7 @@ function RegistrationForm() {
     
     const dispatch = useDispatch()
     const navigate = useNavigate();
-    const { register, handleSubmit , reset } = useForm();
+    const { register, handleSubmit , reset,  formState: { errors } } = useForm();
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const userData = useSelector((state) => state.auth.userData);
@@ -86,7 +86,7 @@ function RegistrationForm() {
               }));
               toast.success("Profile Created Successfully!");
               reset();
-              navigate(-1); // Navigate back after success
+              navigate('/'); // Navigate back after success
           } else {
               throw new Error("User registration failed");
           }
@@ -135,16 +135,29 @@ function RegistrationForm() {
                 type="text"
                 placeholder="First Name"
                 autoComplete="on"
-                {...register('firstName', { required: true })}
+                {...register('firstName',{
+                    required: "First Name is required",
+                    validate: {
+                      matchPattern: (value) =>
+                        /^[A-Za-z]{2,}$/.test(value) || "First Name must be at least 2 characters long and contain only letters",
+                    },})}
                 className="w-full p-2 bg-white/10 border border-gray-300 rounded-lg"
-            />
+                />
+                {errors.firstName && (<p className="text-red-600 text-sm">{errors.firstName.message}</p>)}
             <input
                 type="text"
                 placeholder="Last Name"
                 autoComplete="on"
-                {...register('lastName', { required: true })}
+                {...register('lastName', { required: "Last Name is required",
+                    validate: {
+                      matchPattern: (value) =>
+                        /^[A-Za-z]{2,}$/.test(value) || "Last Name must be at least 2 characters long and contain only letters",
+                    },
+                  })}
                 className="w-full p-2 bg-white/10 border border-gray-300 rounded-lg"
             />
+                            {errors.lastName && (<p className="text-red-600 text-sm">{errors.lastName.message}</p>)}
+
         </div>
     </div>
 {/* /// */}
@@ -159,7 +172,7 @@ function RegistrationForm() {
                 placeholder="Email"
                 autoComplete="on"
                 {...register('email', { required: true })}
-                className="w-full p-2 bg-white/10 border border-gray-300 opacity-75 cursor-not-allowed rounded-lg"
+                className="w-full p-2 bg-white/10 border border-gray-300  cursor-not-allowed rounded-lg"
             />
         </div>
     </div>
@@ -172,9 +185,12 @@ function RegistrationForm() {
                 type="text"
                 placeholder="Location"
                 autoComplete="on"
-                {...register('location', { required: true })}
+                {...register('location',{ required: "Location is required",
+                  })}
                 className="w-full p-2 bg-white/10 border border-gray-300 rounded-lg"
             />
+                   {errors.location && (<p className="text-red-600 text-sm">{errors.location.message}</p>)}
+
         </div>
     </div>
 {/* /// */}
@@ -186,9 +202,11 @@ function RegistrationForm() {
                 type="date"
                 placeholder="d.o.b"
                 autoComplete="on"
-                {...register('dob', { required: true })}
+                {...register('dob', { required: "Date of Birth is required", })}
                 className="w-full md:w-[40%] p-2 text-white/50 bg-white/10 border border-gray-300 rounded-lg"
             />
+                        {errors.dob && <p className="text-red-600 text-sm">{errors.dob.message}</p>}
+
         </div>
     </div>
 {/* /// */}
@@ -200,9 +218,15 @@ function RegistrationForm() {
                 type="number"
                 placeholder="enter 10 digit contact no."
                 autoComplete="on"
-                {...register('contact', { required: true })}
+                {...register('contact', {  required: "Contact Number is required",
+                    validate: {
+                      matchPattern: (value) =>
+                        /^[0-9]{10}$/.test(value) || "Contact Number must be exactly 10 digits",
+                    },})}
                 className="w-full md:w-[45%] p-2 text-white/50 bg-white/10 border border-gray-300 rounded-lg"
             />
+                        {errors.contact && <p className="text-red-600 text-sm">{errors.contact.message}</p>}
+
         </div>
     </div>
 {/* /// */}
@@ -216,9 +240,11 @@ function RegistrationForm() {
                 type="file"
                 placeholder="profile img"
                 autoComplete="on"
-                {...register('profileimg')}
+                {...register('profileimg', {  required: "Profile Image is required", })}
                 className="w-full text-white p-2 bg-white/10 border border-gray-300 rounded-lg"
                 />
+                            {errors.profileimg && <p className="text-red-600 text-sm">{errors.profileimg.message}</p>}
+
         </div>
     </div>
         <h1 className='md:pl-6 pl-2 text-white/65'>{"file size should be < 2 mb , supported file: '.jpg' , '.png' , '.jpeg'"}</h1>

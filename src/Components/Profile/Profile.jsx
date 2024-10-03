@@ -50,7 +50,7 @@ function Profile() {
             userRegister({
                 profileInfo: {
                   $id : $id,
-                  userID: userId,
+                  userID: userID,
                     userName,
                     email,
                     location,
