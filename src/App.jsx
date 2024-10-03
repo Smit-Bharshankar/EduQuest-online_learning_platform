@@ -14,6 +14,7 @@ import About from './Components/AboutUs/About';
 import LessonList from './Components/Courses/LessonList';
 import 'react-toastify/dist/ReactToastify.css';
 import ScrolltoTop from './ScrolltoTop'
+import EditProfile from './Components/Profile/EditProfile';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -79,6 +80,7 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="profile" element={<Profile />} />
           <Route path="about" element={<About />} />
+          <Route path='editprofile' element={ <EditProfile /> }/>
           <Route path="/course/:courseId/lessons" element={<LessonList />} />
         </Route>
         {/* Optional NotFound route */}

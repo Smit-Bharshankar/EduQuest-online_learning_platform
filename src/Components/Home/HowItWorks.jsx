@@ -7,7 +7,7 @@ function HowItWorks() {
     <>
           <div className='flex md:flex-row flex-col items-center justify-center max-h-full w-full pt-20 pb-8'>
               <h1 className='text-4xl font-bold font-poppins text-slate-700'>Start Learning with </h1>
-              <h2 className=' pl-2 text-4xl font-bold font-poppins text-black'>4 easy Steps</h2>
+              <h2 className=' pl-2 text-4xl font-bold font-poppins text-black'>3 easy Steps</h2>
           </div>
 
    <div className="flex flex-col md:flex-row justify-center  px-4 items-center mt-10 gap-8">
@@ -33,11 +33,11 @@ function HowItWorks() {
   </div>
 
   {/* Step 4 */}
-  <div className="flex flex-col items-center text-center p-6 bg-white shadow-gray-500 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
+  {/* <div className="flex flex-col items-center text-center p-6 bg-white shadow-gray-500 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
     <FaCertificate className="text-4xl text-purple-500 mb-4" />
     <h3 className="text-xl font-semibold">Step 4: Get Certified</h3>
     <p className="text-gray-600 mt-2">Complete courses and earn a certification.</p>
-  </div>
+  </div> */}
 </div>
 
 

@@ -97,7 +97,19 @@ export class Service {
     
     
 
-    async updateUserDocument({ documentId, userName, email, password, dob }) {
+    async updateUserDocument({ documentId,userName , email , location , dob , contact }) {
+
+        function formatDate() {
+            const now = new Date();
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+            const year = String(now.getFullYear()).slice(-2); // Last two digits of the year
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+        
+            return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+        }
         try {
             return await this.databases.updateDocument(
                 conf.appwriteDatabaseId,
@@ -106,13 +118,15 @@ export class Service {
                 {
                     userName: userName, // Update the userName
                     email: email, // Update the email
-                    password: password, // Update the password (ensure it's hashed)
-                    DOB: dob // Update the date of birth
+                    location: location, // Store the location 
+                    birthDate: dob ,
+                    contact: contact , // Update the password (ensure it's hashed)
+                    updatedAt: formatDate(),
                 }
             );
         } catch (error) {
             console.error("Appwrite configure :: updateUserDocument :: error", error);
-            return false;
+            return error;
         }
     }
 

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import service from '../../Appwrite/configure';
 import { userRegister } from '../../store/registerSlice';
 import { setProfilePicUrl } from '../../store/registerSlice';  // Import the action
+import { NavLink } from 'react-router-dom';
 
 function Dashboard() {
   const dispatch = useDispatch();
@@ -87,9 +88,11 @@ function Dashboard() {
                 <h1 className="text-sm text-gray-600">
                   {userInfo?.contact || 'Contact not provided'}
                 </h1>
+                <NavLink to='/editprofile'>
                 <button className="mt-3 px-5 py-2 bg-gray-900 text-white font-medium rounded-full shadow-md hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-300">
                   Edit Profile
                 </button>
+                </NavLink>
               </div>
             </div>
 
