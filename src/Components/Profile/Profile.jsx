@@ -5,6 +5,8 @@ import service from '../../Appwrite/configure';
 import Dashboard from './Dashboard'; // Corrected typo in "Dashboard"
 import { userRegister } from '../../store/registerSlice';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+
 
 function Profile() {
   const dispatch = useDispatch(); // Initialize dispatch
@@ -18,6 +20,7 @@ function Profile() {
 
   useEffect(() => {
     const fetchUserData = async () => {
+      
       if (!userEmail) {
         setLoading(false);
         setError('User is not logged in.');
@@ -82,7 +85,7 @@ function Profile() {
     } else {
       setShowRegisterForm(true);
     }
-  }, [userRegistered, user]); // Added user to dependencies
+  }, [userRegistered,userEmail, user]); // Added user to dependencies
 
   if (loading) {
     return (

@@ -81,7 +81,7 @@ function EditProfile() {
 
     return (
         <div
-            className="h-full w-full bg-gradient-to-br pb-12 from-[#e45757] via-[#a20b7f] to-[#42129b]"
+            className="h-full w-full flex items-center justify-center bg-gradient-to-br pb-12 from-[#e45757] via-[#a20b7f] to-[#42129b]"
             style={{
                 backgroundImage: `url(https://images.unsplash.com/photo-1619796696652-a29a854f21a0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)`,
                 backgroundSize: 'cover',

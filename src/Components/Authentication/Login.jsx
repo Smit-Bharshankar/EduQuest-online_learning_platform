@@ -15,9 +15,7 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const { register, handleSubmit, formState: { errors },} = useForm();  
-
   const [error, setError] = useState("");
   const [signIn, setSignIn] = useState(true);
 

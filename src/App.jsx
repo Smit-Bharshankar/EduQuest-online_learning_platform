@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import authService from './Appwrite/auth';
 import { login, logout } from './store/authSlice';
+import { userRegister } from './store/registerSlice';
 
 import MainLayout from './MainLayout';
 import Home from './Components/Home/Home';
@@ -15,10 +16,12 @@ import LessonList from './Components/Courses/LessonList';
 import 'react-toastify/dist/ReactToastify.css';
 import ScrolltoTop from './ScrolltoTop'
 import EditProfile from './Components/Profile/EditProfile';
+import service from './Appwrite/configure';
 
 function App() {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
+  const userEmail = useSelector((state) => state.auth.userData?.email);
 
   useEffect(() => {
     authService.getCurrentUser()
@@ -37,6 +40,47 @@ function App() {
       })
       .finally(() => setLoading(false));
   }, [dispatch]);
+
+  useEffect(() => {
+    const getUserDetails = async () => {
+        try {
+            if (userEmail) {
+                const userId = await service.findUserByEmail(userEmail);
+                const userData = await service.findUserById(userId);
+
+                if (userData) {
+                    const {  $id, userID, userName, email, location, dob: birthDate, contact, profilePicture  } = userData;
+
+                    console.log("Profile Picture ID:", profilePicture);
+
+                    if (!profilePicture) {
+                        console.log("profileImgId is missing in user data");
+                    }
+
+                    dispatch(
+                        userRegister({
+                            profileInfo: {
+                                $id,
+                                userID,
+                                userName,
+                                email,
+                                location,
+                                dob: birthDate,
+                                contact,
+                                profilePicture,
+                            },
+                        })
+                    );
+                }
+            }
+        } catch (error) {
+            console.error("Failed to fetch user details:", error);
+        }
+    };
+
+    getUserDetails();
+}, [userEmail, dispatch]); // Ensure dispatch is included in the dependency array
+
 
   // Loading indicator while checking authentication
   if (loading) {
