@@ -4,7 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import authService from './Appwrite/auth';
 import { login, logout } from './store/authSlice';
-import { userRegister } from './store/registerSlice';
+import { userRegister, setProfilePicUrl } from './store/registerSlice';
 
 import MainLayout from './MainLayout';
 import Home from './Components/Home/Home';
@@ -14,73 +14,88 @@ import Profile from './Components/Profile/Profile';
 import About from './Components/AboutUs/About';
 import LessonList from './Components/Courses/LessonList';
 import 'react-toastify/dist/ReactToastify.css';
-import ScrolltoTop from './ScrolltoTop'
+import ScrolltoTop from './ScrolltoTop';
 import EditProfile from './Components/Profile/EditProfile';
 import service from './Appwrite/configure';
 
 function App() {
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null); // For error handling
   const dispatch = useDispatch();
   const userEmail = useSelector((state) => state.auth.userData?.email);
 
+  // Effect to check if the user is authenticated and fetch current user
   useEffect(() => {
     authService.getCurrentUser()
       .then((userData) => {
         if (userData) {
           dispatch(login({ userData }));
-          toast.success("Welcome back!"); // Show success toast
+          toast.success("Welcome back!");
         } else {
           dispatch(logout());
-          toast.info("You are not logged in."); // Show info toast
+          toast.info("You are not logged in.");
         }
       })
       .catch((error) => {
         console.error(error);
-        toast.error("An error occurred while checking authentication."); // Show error toast
+        toast.error("An error occurred while checking authentication.");
       })
       .finally(() => setLoading(false));
   }, [dispatch]);
 
+  // Effect to fetch user details and profile picture
   useEffect(() => {
     const getUserDetails = async () => {
-        try {
-            if (userEmail) {
-                const userId = await service.findUserByEmail(userEmail);
-                const userData = await service.findUserById(userId);
+      try {
+        if (userEmail) {
+          const userId = await service.findUserByEmail(userEmail);
+          const userData = await service.findUserById(userId);
 
-                if (userData) {
-                    const {  $id, userID, userName, email, location, dob: birthDate, contact, profilePicture  } = userData;
+          if (userData) {
+            const { $id, userID, userName, email, location, dob: birthDate, contact, profilePicture } = userData;
 
-                    console.log("Profile Picture ID:", profilePicture);
+            console.log("Profile Picture ID:", profilePicture);
 
-                    if (!profilePicture) {
-                        console.log("profileImgId is missing in user data");
-                    }
-
-                    dispatch(
-                        userRegister({
-                            profileInfo: {
-                                $id,
-                                userID,
-                                userName,
-                                email,
-                                location,
-                                dob: birthDate,
-                                contact,
-                                profilePicture,
-                            },
-                        })
-                    );
+            if (!profilePicture) {
+              console.log("Profile picture is missing in user data");
+            } else {
+              try {
+                const profilePicUrl = await service.getProfilePic(profilePicture); // Await here
+                if (!profilePicUrl) {
+                  throw new Error('Profile Picture not found');
                 }
+                dispatch(setProfilePicUrl(profilePicUrl)); // Dispatch profile picture URL to Redux store
+              } catch (error) {
+                console.error('Error while fetching profile picture:', error);
+                setError(error.message || 'Error fetching profile picture');
+              }
             }
-        } catch (error) {
-            console.error("Failed to fetch user details:", error);
+
+            // Dispatch user details to Redux store
+            dispatch(
+              userRegister({
+                profileInfo: {
+                  $id,
+                  userID,
+                  userName,
+                  email,
+                  location,
+                  dob: birthDate,
+                  contact,
+                  profilePicture, // Pass the profile picture ID to Redux
+                },
+              })
+            );
+          }
         }
+      } catch (error) {
+        console.error("Failed to fetch user details:", error);
+        setError('Failed to fetch user details');
+      }
     };
 
     getUserDetails();
-}, [userEmail, dispatch]); // Ensure dispatch is included in the dependency array
-
+  }, [userEmail, dispatch]); // Include necessary dependencies
 
   // Loading indicator while checking authentication
   if (loading) {
@@ -96,8 +111,8 @@ function App() {
   return (
     <BrowserRouter>
       <ToastContainer
-        position="top-left" // Adjust to 'top-center' or any other suitable position
-        autoClose={3000} // Set auto-close duration to 3 seconds
+        position="top-left"
+        autoClose={3000}
         hideProgressBar={false}
         newestOnTop={true}
         closeOnClick
@@ -106,29 +121,26 @@ function App() {
         draggable
         pauseOnHover
         toastStyle={{
-          maxWidth: '300px', // Set maximum width for the toast
+          maxWidth: '300px',
           borderRadius: '4px',
-          fontSize: "0.875rem", // Adjust font size for a more compact message
-          padding: "8px", // Adjust padding to make it less intrusive
+          fontSize: "0.875rem",
+          padding: "8px",
           color: '#050505',
-          fontFamily:'poppins'
-        }}  />
-
-        <ScrolltoTop />
+          fontFamily: 'Poppins',
+        }}
+      />
+      <ScrolltoTop />
       <Routes>
-        {/* MainLayout as the parent route */}
         <Route path="/" element={<MainLayout />}>
-          {/* Nested routes */}
-          <Route index element={<Home />} /> {/* Default child route */}
+          <Route index element={<Home />} />
           <Route path="course" element={<Course />} />
           <Route path="login" element={<Login />} />
           <Route path="profile" element={<Profile />} />
           <Route path="about" element={<About />} />
-          <Route path='editprofile' element={ <EditProfile /> }/>
+          <Route path="editprofile" element={<EditProfile />} />
           <Route path="/course/:courseId/lessons" element={<LessonList />} />
         </Route>
-        {/* Optional NotFound route */}
-        <Route path="*" element={<div className='flex items-center justify-center w-full h-screen text-6xl'>404 Not Found</div>} />
+        <Route path="*" element={<div className="flex items-center justify-center w-full h-screen text-6xl">404 Not Found</div>} />
       </Routes>
     </BrowserRouter>
   );
