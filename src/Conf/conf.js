@@ -10,7 +10,7 @@ const conf = {
     appwriteCollectionId_Doubts: String(import.meta.env.VITE_APPWRITE_COLLECTION_ID_DOUBTS),
     appwriteCollectionId_Comments: String(import.meta.env.VITE_APPWRITE_COLLECTION_ID_COMMENTS),
     appwriteCollectionId_Tests: String(import.meta.env.VITE_APPWRITE_COLLECTION_ID_TESTS),
-    
+    appwriteCollectionId_Test_Results : String(import.meta.env.VITE_APPWRITE_COLLECTION_ID_TESTS_RESULTS),
     appwriteBucketId: String(import.meta.env.VITE_APPWRITE_BUCKET_ID),
 }
 

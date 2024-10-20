@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import service from '../../Appwrite/configure';
-import { useParams } from 'react-router-dom';
+import { useParams , useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import Comments from '../Comments/Comments';
 import './description.css'
 
 
 const LessonList = () => {
+
+  const navigate = useNavigate();
 
   //comment && description toggle:
   const [showComments , setShowComments] = useState(false)
@@ -18,7 +20,8 @@ const LessonList = () => {
   }
 
 
-    const { courseId } = useParams();
+    const { courseId } = useParams(); 
+    
 
     const [lessons, setLessons] = useState([]);
     const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
@@ -30,6 +33,7 @@ const LessonList = () => {
             try {
                 const lessonsData = await service.getLessonsByCourseId(courseId);
                 if (lessonsData) {
+                  console.log('Lessons Data : check for testID' , lessonsData)
                     setLessons(lessonsData);
                 } else {
                     setError("No lessons found for this course");
@@ -47,6 +51,12 @@ const LessonList = () => {
     const handleLessonSelect = (index) => {
         setCurrentLessonIndex(index);
     };
+
+    const handleTestClick = () => {
+      console.log(`Taking Test for Course:  ${courseId} `);
+    
+      navigate(`/course/${courseId}/test`)
+    }
 
     if (loading) {
         return ( 
@@ -105,6 +115,12 @@ const LessonList = () => {
         </li>
       ))}
     </ul>
+    <div className='w-auto text-center rounded-lg bg-amber-600 bg-opacity-65 py-4 mt-8 text-purple-800'>
+      <h1 className=' text-xl md:text-2xl font-semibold'>Take test to test youself and get a course completion certificate for FREE!</h1>
+      <button className='text-xl md:text-2xl py-1 px-2 mt-4 rounded-md bg-blue-500 text-white hover:scale-105 transition-all  ease-in'
+       onClick={handleTestClick}>
+        Take Test</button>
+    </div>
   </div>
 </div>
 

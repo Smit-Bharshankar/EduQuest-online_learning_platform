@@ -494,15 +494,16 @@ export class Service {
         }
     }
 
-    async getTestByCourseId({courseId}) {
+    async getTestByCourseId(courseID) {
         try {
-            return await this.databases.listDocuments(
+           const testData =  await this.databases.listDocuments(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId_Tests,
                 [
-                    Query.equal("courseId",courseId)
+                    Query.equal("courseID",courseID)
                 ]
             )
+            if (testData) return testData;
         } catch (error) {
             console.error("Appwrite configure :: getTestByCourseId :: error", error);
             return false;

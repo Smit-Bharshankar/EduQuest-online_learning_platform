@@ -17,6 +17,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import ScrolltoTop from './ScrolltoTop';
 import EditProfile from './Components/Profile/EditProfile';
 import service from './Appwrite/configure';
+import ViewResult from './Components/CourseTest/ViewResult';
+import TestComponent from './Components/CourseTest/TestComponent';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -137,6 +139,8 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="profile" element={<Profile />} />
           <Route path="about" element={<About />} />
+          <Route path="/course/:courseId/test" element={<TestComponent />} />
+          <Route path="/results" element={<ViewResult />} />
           <Route path="editprofile" element={<EditProfile />} />
           <Route path="/course/:courseId/lessons" element={<LessonList />} />
         </Route>

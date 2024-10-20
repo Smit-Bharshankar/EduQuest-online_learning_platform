@@ -42,7 +42,8 @@ function Course() {
   }
 
   return (
-    <div className="flex flex-wrap pb-6 md:gap-0 gap-6 justify-evenly items-center mt-12">
+    <div className='w-full h-full flex justify-center'>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:gap-10 justify-items-center gap-y-16 py-12 w-full max-w-screen-lg mx-auto">
       {courses.map((course) => (
         <CourseCard
           key={course.$id} // Assuming each course has a unique ID from Appwrite
@@ -51,10 +52,13 @@ function Course() {
           date={course.$createdAt}
           courseId={course.$id}
           thumbnailUrl={course.thumbnail} // Adjust based on your data structure
-          instructor = {course.instructor}
+          instructor={course.instructor}
         />
       ))}
     </div>
+  </div>
+  
+
   );
 }
 
