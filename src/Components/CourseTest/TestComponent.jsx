@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate , NavLink } from 'react-router-dom';
 import service from '../../Appwrite/configure';
+import { useSelector } from 'react-redux';
+import { userRegister } from '../../store/registerSlice';
 
 function TestComponent() {
+
+  const userInfo = useSelector((state) => state.register.profileInfo);
+  const userEmail = useSelector((state) => state.auth.userData?.email);
+  
+
     const { courseId } = useParams();
     const navigate = useNavigate();
     const { register, handleSubmit } = useForm();
@@ -11,18 +18,35 @@ function TestComponent() {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [isTestStarted, setIsTestStarted] = useState(false); // State to track if test has started
+    const [courseName , setCourseName ] = useState('')
+    const [ userNameforCertificate , setUserNameforCertificate ] = useState('')
+    const [ courseData , setCourseData ] = useState()
 
     useEffect(() => {
         const fetchLessons = async () => {
             try {
                 const testData = await service.getTestByCourseId(courseId);
+                const courseData = await service.getCourseById(courseId);
                 if (testData && testData.documents.length > 0) {
+
                     const parsedQuestions = JSON.parse(testData.documents[0].questions[0]);
                     setQuestions(parsedQuestions);
                 } else {
                     setError("No Test found for this course");
                 }
-            } catch (error) {
+
+                if (courseData) {
+                    console.log('courseDetails for //:' , courseData)
+                    console.log('courseDetails for find testID:' , courseData.testID[0].testID)
+
+                    console.log(' User Name for certificate: ' , userInfo?.userName)
+                    console.log('userData for finding user documents: ' , userInfo)
+                    setCourseData(courseData)
+                    setCourseName(courseData.title)
+                    setUserNameforCertificate(userInfo?.userName)
+                }
+            } 
+            catch (error) {
                 setError("Error fetching test questions");
             } finally {
                 setLoading(false);
@@ -46,24 +70,48 @@ function TestComponent() {
         return <p className="text-red-500 text-center">{error}</p>;
     }
 
+    if (!userInfo) {
+        return (
+            <div>
+                First Register Yourself Bfore Taking test
+                <NavLink to={'/profile'}>
+                    <button>Click here to  Register </button>
+                </NavLink>
+            </div>
+        )
+    }
+
+    if (!userEmail) {
+        return (
+            <div>
+                First Login Bfore Taking test
+                <NavLink to={'/login'}>
+                    <button> Click here to  Login </button>
+                </NavLink>
+            </div>
+        )
+    }
+
     const onSubmit = (data) => {
-        let total = 0; // Use let instead of const
+        console.log('Form submitted!', data); // Log form data
     
-        // Calculate the total score
+        let total = 0;
+    
         const calculateTotal = () => {
             for (let i = 0; i < questions.length; i++) {
-                // Check if the user's answer matches the correct answer
-                if (questions[i].Answer === data[`question-${i}`]) { // Access the correct answer and user answer
-                    total += 1; // Increment the total score
+                if (questions[i].Answer === data[`question-${i}`]) {
+                    total += 1;
                 }
             }
         };
     
-        // Call the function to calculate total
         calculateTotal();
     
-        // Navigate to the results page and pass data and total score
-        navigate('/results', { state: { answers: data, score: total } });
+        // Check the navigation process
+        console.log("Navigating to results...");
+        navigate('/results', { 
+            state: { answers: data, score: total, courseName: courseName, userName: userNameforCertificate , courseData : courseData } 
+        });
     };
 
     // Function to start the test
@@ -102,7 +150,7 @@ function TestComponent() {
                                     <li key={i} className="mb-2">
                                         <input
                                             type="radio"
-                                            {...register(`question-${index}`)} // Registering the input with React Hook Form
+                                            {...register(`question-${index}`, {required: `You must select an option for question ${index + 1}`})} // Registering the input with React Hook Form
                                             id={`option-${index}-${i}`}
                                             value={option} // Value to be submitted
                                             className="mr-2"

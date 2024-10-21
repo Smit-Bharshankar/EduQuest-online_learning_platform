@@ -76,7 +76,7 @@ function App() {
             // Dispatch user details to Redux store
             dispatch(
               userRegister({
-                profileInfo: {
+                  profileInfo: {
                   $id,
                   userID,
                   userName,

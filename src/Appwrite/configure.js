@@ -154,7 +154,7 @@ export class Service {
         }
     }
 
-    async getCourseById({courseId}) {
+    async getCourseById(courseId) {
         try {
             return await this.databases.getDocument(
                 conf.appwriteDatabaseId,
@@ -510,15 +510,22 @@ export class Service {
         }
     }
 
-    async updateTestResult({testId , score , timestamp}) {
+    async createTestResult({userID , courseID , testID , score , isPassed , answers , totalMarks , certificateID}) {
         try {
-            return await this.databases.updateDocument(
+            return await this.databases.createDocument(
                 conf.appwriteDatabaseId,
-                conf.appwriteCollectionId_Tests,
-                testId,
+                conf.appwriteCollectionId_Test_Results,
+                ID.unique(),
                 {
+                    resultID : ID.unique(),
+                    userID : userID ,
+                    courseID : courseID,
+                    testID : testID ,
+                    isPassed : isPassed ,
+                    answers : answers ,
+                    totalMarks : totalMarks ,
                     score: score,
-                    timestamp: timestamp,
+                    certificateID: certificateID,
                 }
             )
         } catch (error) {
@@ -539,6 +546,8 @@ export class Service {
             return false;
         }
     }
+
+    
 
     // Utility Methods
 

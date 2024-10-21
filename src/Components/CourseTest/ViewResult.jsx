@@ -1,20 +1,27 @@
 import { useLocation } from 'react-router-dom';
+import Certificate from './Certificate';
+import service from '../../Appwrite/configure';
 
-function ResultsComponent() {
+function ViewResult() {
     const location = useLocation();
-    const { answers, score } = location.state || { answers: {}, score: 0 }; // Default values in case of missing state
-  
+    console.log(location.state); // Add this to check the passed state
+    
+    const { answers, score , courseName = 'Course', userName = '' , courseData } = location.state || { answers: {}, score: 0, courseName: 'Course', userName: '' }; 
+
     const totalQuestions = Object.keys(answers).length;
     const percentageScore = ((score / totalQuestions) * 100).toFixed(2);
 
+
+
     return (
-        <div className="max-w-4xl mx-auto p-6 mt-8">
+        <div className='bg-gray-100 w-full h-full'>
+        <div className="max-w-4xl mx-auto p-6 bg-white mt-8">
             <h1 className="text-3xl font-bold text-center text-blue-600 mb-6">Test Results</h1>
 
             <div className="bg-white p-6 rounded-lg shadow-md text-center">
                 <h2 className="text-xl font-semibold text-gray-700 mb-2">Your Score</h2>
                 <div className="text-4xl font-bold text-blue-600 mb-4">{score} / {totalQuestions}</div>
-                
+
                 <p className="text-gray-600 mb-4">
                     You answered <strong>{score}</strong> out of <strong>{totalQuestions}</strong> questions correctly.
                 </p>
@@ -48,6 +55,10 @@ function ResultsComponent() {
                 </div>
             </div>
 
+            <div>
+                <Certificate course={courseName} userName={userName} courseData={courseData} answers = {answers} totalQuestions = {totalQuestions} score = {score} />
+            </div>
+
             <div className="mt-8">
                 <h2 className="text-2xl font-semibold mb-4 text-gray-700">Your Answers</h2>
                 <ul className="space-y-4">
@@ -59,7 +70,8 @@ function ResultsComponent() {
                 </ul>
             </div>
         </div>
+        </div>
     );
 }
 
-export default ResultsComponent;
+export default ViewResult;
