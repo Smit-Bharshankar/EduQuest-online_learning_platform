@@ -120,53 +120,58 @@ function TestComponent() {
     };
 
     return (
-        <div className='max-w-3xl mx-auto p-4'>
-            {!isTestStarted ? (
-                // Intro view before the test begins
-                <div className="text-center">
-                    <h1 className="text-3xl font-bold mb-4">Test Introduction</h1>
-                    <p className="text-lg mb-4">Welcome to the course test. Please note the following:</p>
-                    <ul className="text-left list-disc list-inside mb-6">
-                        <li>The test consists of multiple-choice questions.</li>
-                        <li>You are required to score at least 70% to qualify for the certificate.</li>
-                        <li>Once you start, you cannot pause the test.</li>
-                    </ul>
-                    <button 
-                        onClick={startTest} 
-                        className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                    >
-                        Begin Test
-                    </button>
-                </div>
-            ) : (
-                // Test questions view after clicking 'Begin Test'
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <h1 className="text-2xl font-bold mb-4">Test Questions</h1>
-                    {questions.map((question, index) => (
-                        <div key={index} className="mb-6 p-4 border border-gray-300 rounded-lg shadow-md">
-                            <h2 className="font-semibold text-lg mb-2">{question.Question}</h2>
-                            <ul className="list-decimal pl-5">
-                                {question.Options.map((option, i) => (
-                                    <li key={i} className="mb-2">
-                                        <input
-                                            type="radio"
-                                            {...register(`question-${index}`, {required: `You must select an option for question ${index + 1}`})} // Registering the input with React Hook Form
-                                            id={`option-${index}-${i}`}
-                                            value={option} // Value to be submitted
-                                            className="mr-2"
-                                        />
-                                        <label htmlFor={`option-${index}-${i}`}>{option}</label>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    ))}
-                    <button type="submit" className="mt-4 px-4 py-2 bg-blue-600 text-white rounded">
-                        Submit
-                    </button>
-                </form>
-            )}
-        </div>
+        <div className="w-full min-h-full bg-gray-100">
+        {!isTestStarted ? (
+          // Intro view before the test begins
+          <div className="h-screen flex items-center justify-center bg-gray-100">
+  <div className="bg-white text-center shadow-lg rounded-lg p-6 max-w-lg w-full">
+    <h1 className="text-4xl font-bold mb-4 text-blue-600">Test Introduction</h1>
+    <p className="text-lg mb-4 text-gray-700">Welcome to the course test. Please note the following:</p>
+    <ul className="text-left list-disc list-inside mb-6 text-gray-600">
+      <li>The test consists of multiple-choice questions.</li>
+      <li>You are required to score at least 70% to qualify for the certificate.</li>
+      <li>Once you start, you cannot pause the test.</li>
+    </ul>
+    <button 
+      onClick={startTest} 
+      className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105"
+    >
+      Begin Test
+    </button>
+  </div>
+</div>
+
+        ) : (
+          // Test questions view after clicking 'Begin Test'
+          <form onSubmit={handleSubmit(onSubmit)} className="bg-white shadow-lg max-w-3xl mx-auto  rounded-lg p-6">
+            <h1 className="text-3xl font-bold mb-4 text-blue-600">Test Questions</h1>
+            {questions.map((question, index) => (
+              <div key={index} className="mb-6 p-4 border border-gray-300 rounded-lg shadow-md transition duration-300 hover:shadow-lg">
+                <h2 className="font-semibold text-xl mb-2 text-gray-800">{question.Question}</h2>
+                <ul className="list-decimal pl-5">
+                  {question.Options.map((option, i) => (
+                    <li key={i} className="mb-2">
+                      <input
+                        type="radio"
+                        {...register(`question-${index}`, { required: `You must select an option for question ${index + 1}` })} // Registering the input with React Hook Form
+                        id={`option-${index}-${i}`}
+                        value={option} // Value to be submitted
+                        className="mr-2 accent-blue-600"
+                      />
+                      <label htmlFor={`option-${index}-${i}`} className="text-gray-700">{option}</label>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+            <button type="submit" className="mt-4 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105">
+              Submit
+            </button>
+          </form>
+        )}
+      </div>
+      
+      
     );
 }
 

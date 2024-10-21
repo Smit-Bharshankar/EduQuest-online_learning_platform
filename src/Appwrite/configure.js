@@ -503,7 +503,23 @@ export class Service {
                     Query.equal("courseID",courseID)
                 ]
             )
-            if (testData) return testData;
+            if (testData) {return testData};
+        } catch (error) {
+            console.error("Appwrite configure :: getTestByCourseId :: error", error);
+            return false;
+        }
+    }
+
+    async getTestResultsByUserId(userID) {
+        try {
+           const testResults =  await this.databases.listDocuments(
+                conf.appwriteDatabaseId,
+                conf.appwriteCollectionId_Test_Results,
+                [
+                    Query.equal("userID",userID)
+                ]
+            )
+            if (testResults) return testResults.documents;
         } catch (error) {
             console.error("Appwrite configure :: getTestByCourseId :: error", error);
             return false;
@@ -623,6 +639,22 @@ export class Service {
             return false;
         }
     }
+
+    async getCourseCertificate(testResultID) {
+        try {
+            // Get the file download URL
+            const fileDownload = await this.storage.getFileDownload(
+                conf.appwriteBucketId,
+                testResultID
+            );
+    
+            // Open the file download in a new window
+            window.open(fileDownload.href, '_blank');
+        } catch (error) {
+            console.error('Error downloading course certificate:', error.message);
+        }
+    }
+    
 }
 
 const service = new Service();

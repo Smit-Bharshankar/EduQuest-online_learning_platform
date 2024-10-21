@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { toPng } from "html-to-image";
 import Certificate_of_Completion from "../../assets/Certificate/Certificate_of_Completion.png"; // Adjust the path accordingly
 import service from "../../Appwrite/configure"; // Import Appwrite service configuration
@@ -6,6 +6,8 @@ import { useSelector } from "react-redux";
 
 function Certificate({ userName, course, courseData, answers, totalQuestions, score }) {
   const ref = useRef(null);
+  const [ buttonpress , setbuttonpress ] = useState(true)
+  const [ disablebutton , setdisabblebutton ] = useState(false)
   const userInfo = useSelector((state) => state.register.profileInfo);
   console.log(userInfo);
 
@@ -26,11 +28,12 @@ function Certificate({ userName, course, courseData, answers, totalQuestions, sc
       console.error('Required data is missing. Cannot generate certificate.');
       return;
     }
-
+    setbuttonpress(false)
+    setdisabblebutton(true)
     try {
       const dataUrl = await toPng(ref.current, { cacheBust: true });
       const blob = await fetch(dataUrl).then((res) => res.blob());
-
+      
       // Step 1: Upload the certificate to Appwrite
       const certificateResponse = await saveCertToAppwrite(blob);
       console.log('Certificate uploaded successfully:', certificateResponse);
@@ -85,6 +88,7 @@ function Certificate({ userName, course, courseData, answers, totalQuestions, sc
         certificateID: certificateID, // Use the uploaded certificate ID
       });
       console.log('Result saved successfully:', userResult);
+      setbuttonpress(true)
     } catch (error) {
       console.error('Error saving user results:', error);
     }
@@ -120,9 +124,9 @@ function Certificate({ userName, course, courseData, answers, totalQuestions, sc
         </div>
       </div>
       {/* Download Button */}
-      <div className="w-full flex items-center justify-center mt-6">
-        <button className="rounded-md cursor-pointer z-20 bg-purple-600 px-2 py-1 text-white" onClick={downloadCerti}>
-          Download
+      <div className= "w-full flex items-center justify-center mt-6 " >
+        <button className={`rounded-md cursor-pointer z-20 bg-purple-600 px-2 py-1 text-white  ${disablebutton ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} `} onClick={downloadCerti} disabled={disablebutton}>
+          { buttonpress ? ( ' Download  ' ) : ( "  Downloading... please don't close the window  ") }
         </button>
       </div>
     </div>

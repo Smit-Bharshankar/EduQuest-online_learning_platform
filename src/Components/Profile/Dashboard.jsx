@@ -43,7 +43,7 @@ function Dashboard() {
 
   return (
     <>
-    <div className="w-full min-h-screen bg-gradient-to-tl to-gray-200 from-gray-400 flex items-center justify-center">
+    <div className="max-w-[50%] min-h-screen bg-gradient-to-tl to-gray-200 from-gray-400 flex items-start justify-center">
       <div className="max-w-5xl w-full bg-white rounded-lg shadow-2xl overflow-hidden">
         {/* Cover Image */}
         <div className="h-36 relative overflow-hidden">
@@ -97,7 +97,7 @@ function Dashboard() {
             </div>
 
             {/* Info Section */}
-            <div className="mt-8 sm:mt-0 text-center sm:text-right">
+            {/* <div className="mt-8 sm:mt-0 text-center sm:text-right">
               <h2 className="text-xl font-semibold text-gray-800">
                 P.E.S Modern College of Engineering
               </h2>
@@ -116,7 +116,7 @@ function Dashboard() {
                   React
                 </span>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
     {error && <p className="text-red-500 text-center mt-4">{error}</p>}

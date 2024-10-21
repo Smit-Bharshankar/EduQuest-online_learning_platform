@@ -57,6 +57,7 @@ function EditProfile() {
                 console.log("User updated successfully:", updateUser);
                 dispatch(userRegister({
                     profileInfo: {
+                        ...userInfo,
                         userName,
                         email,
                         location,
@@ -66,7 +67,7 @@ function EditProfile() {
                 }));
                 toast.success("Profile Updated Successfully!");
                 reset();
-                navigate('/profile'); // Navigate back after success
+                navigate('/'); // Navigate back after success
             } else {
                 throw new Error("User Data Update failed");
             }

@@ -54,10 +54,19 @@ function ViewResult() {
                     )}
                 </div>
             </div>
-
-            <div>
+                        {
+                            percentageScore >= 70 ? (
+                                <div>
                 <Certificate course={courseName} userName={userName} courseData={courseData} answers = {answers} totalQuestions = {totalQuestions} score = {score} />
             </div>
+                            ) : (
+                                <div className='text-gray-800 flex items-center justify-center py-4 font-semibold'>
+                                    Try Again to be eligible for certificate 
+                                </div>
+                            )
+                        
+            
+}
 
             <div className="mt-8">
                 <h2 className="text-2xl font-semibold mb-4 text-gray-700">Your Answers</h2>
