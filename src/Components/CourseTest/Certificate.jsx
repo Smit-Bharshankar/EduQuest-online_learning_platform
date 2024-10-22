@@ -24,12 +24,13 @@ function Certificate({ userName, course, courseData, answers, totalQuestions, sc
     console.log('ansers:' , answers)
 
   const downloadCerti = async () => {
+    setbuttonpress(false)
+    setdisabblebutton(true)
     if (!ref.current || !userID || !courseID || !testID) {
       console.error('Required data is missing. Cannot generate certificate.');
       return;
     }
-    setbuttonpress(false)
-    setdisabblebutton(true)
+   
     try {
       const dataUrl = await toPng(ref.current, { cacheBust: true });
       const blob = await fetch(dataUrl).then((res) => res.blob());

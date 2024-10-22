@@ -18,6 +18,7 @@ function Login() {
   const { register, handleSubmit, formState: { errors },} = useForm();  
   const [error, setError] = useState("");
   const [signIn, setSignIn] = useState(true);
+  
 
   useEffect(() => {
     // Update isMobile state on window resize
@@ -52,7 +53,7 @@ function Login() {
         if (userData) {
           dispatch(storeLogin(userData));
           toast.success("Login Successful!");
-          navigate(-1);
+          navigate('/');
         }
       }
     } catch (error) {

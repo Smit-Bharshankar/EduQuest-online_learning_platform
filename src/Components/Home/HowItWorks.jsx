@@ -33,11 +33,11 @@ function HowItWorks() {
   </div>
 
   {/* Step 4 */}
-  {/* <div className="flex flex-col items-center text-center p-6 bg-white shadow-gray-500 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
+  <div className="flex flex-col items-center text-center p-6 bg-white shadow-gray-500 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
     <FaCertificate className="text-4xl text-purple-500 mb-4" />
     <h3 className="text-xl font-semibold">Step 4: Get Certified</h3>
     <p className="text-gray-600 mt-2">Complete courses and earn a certification.</p>
-  </div> */}
+  </div>
 </div>
 
 

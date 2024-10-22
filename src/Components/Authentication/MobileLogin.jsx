@@ -16,6 +16,7 @@ function MobileLogin() {
   const [error, setError] = useState("");
   const [signIn, setSignIn] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+  
 
 
   const toggleForm = () => {
@@ -36,7 +37,7 @@ function MobileLogin() {
         if (userData) {
           dispatch(storeLogin(userData));
           toast.success("Login Successful!");
-          navigate(-1);
+          navigate('/');
         }
       }
     } catch (error) {
