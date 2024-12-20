@@ -16,6 +16,8 @@ function MobileLogin() {
   const [error, setError] = useState("");
   const [signIn, setSignIn] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false); // Loader for API calls
+  
   
 
 
@@ -30,6 +32,7 @@ function MobileLogin() {
   //// Login method
   const login = async (data) => {
     setError("");
+    setIsSubmitting(true);
     try {
       const session = await authService.login(data);
       if (session) {
@@ -46,12 +49,15 @@ function MobileLogin() {
       } else {
         setError(error.message || "An error occurred. Please try again.");
       }
+    }finally {
+      setIsSubmitting(false); // Hide loader
     }
   };
 
   //// Sign up method
   const createAccount = async (data) => {
     setError("");
+    setIsSubmitting(true);
     try {
       const session = await authService.createAccount(data);
       if (session) {
@@ -68,6 +74,8 @@ function MobileLogin() {
       } else {
         setError(error.message || "An error occurred. Please try again.");
       }
+    }finally {
+      setIsSubmitting(false); // Hide loader
     }
   };
 
@@ -174,9 +182,10 @@ function MobileLogin() {
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.6 }}
                   type="submit"
+                  disabled={isSubmitting}
                   className="w-full bg-[#6f1bf7] text-white py-2 rounded-lg transition duration-300"
                 >
-                  {signIn ? "Sign In" : "Sign Up"}
+                  {isSubmitting ? "Processing..." : signIn ? "Sign In" : "Sign Up"}
                 </motion.button>
 
                 {error && (

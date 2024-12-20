@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
@@ -11,79 +11,66 @@ import { toast } from "react-toastify";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 
 function Login() {
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 500); // Check initial screen width
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 500); // Initialize correctly
   const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { register, handleSubmit, formState: { errors },} = useForm();  
   const [error, setError] = useState("");
   const [signIn, setSignIn] = useState(true);
-  
+  const [isSubmitting, setIsSubmitting] = useState(false); // Loader for API calls
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    // Update isMobile state on window resize
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 500);
-    };
+  const { register, handleSubmit, formState: { errors } } = useForm();
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+  // Optimized resize handler using useCallback
+  const handleResize = useCallback(() => {
+    setIsMobile(window.innerWidth < 500);
   }, []);
 
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [handleResize]);
+
   if (isMobile) {
-    // Render mobile login component if isMobile is true
     return <MobileLogin />;
   }
 
-  const toggleForm = () => {
-    setSignIn(!signIn);
-  };
+  const toggleForm = () => setSignIn((prev) => !prev);
+  const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
-  //// Login method
   const login = async (data) => {
     setError("");
+    setIsSubmitting(true); // Show loader
     try {
       const session = await authService.login(data);
       if (session) {
         const userData = await authService.getCurrentUser();
-        if (userData) {
-          dispatch(storeLogin(userData));
-          toast.success("Login Successful!");
-          navigate('/');
-        }
+        dispatch(storeLogin(userData));
+        toast.success("Login Successful!");
+        navigate("/");
       }
     } catch (error) {
-      if (error.code === 401) {
-        setError("Incorrect ID or Password");
-      } else {
-        setError(error.message || "An error occurred. Please try again.");
-      }
+      setError(error.code === 401 ? "Incorrect ID or Password" : error.message || "An error occurred.");
+    } finally {
+      setIsSubmitting(false); // Hide loader
     }
   };
 
-  ////  Sign up method
   const createAccount = async (data) => {
     setError("");
+    setIsSubmitting(true);
     try {
       const session = await authService.createAccount(data);
       if (session) {
         const userData = await authService.getCurrentUser();
-        if (userData) {
-          dispatch(storeLogin(userData));
-          toast.success("Sign-Up Successful!");
-          navigate("/");
-        }
+        dispatch(storeLogin(userData));
+        toast.success("Sign-Up Successful!");
+        navigate("/");
       }
     } catch (error) {
-      if (error.code === 409) {
-        setError("Account already exists with this email.");
-      } else {
-        setError(error.message || "An error occurred. Please try again.");
-      }
+      setError(error.code === 409 ? "Account already exists with this email." : error.message || "An error occurred.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -92,10 +79,8 @@ function Login() {
       className="h-screen w-full flex font-poppins justify-center items-center bg-gradient-to-br from-[#1a1919] via-gray-800 to-slate-700"
       style={{
         backgroundImage: `url(${nightsky})`,
-        backgroundSize: "cover", // or 'contain'
+        backgroundSize: "cover",
         backgroundPosition: "center",
-        // width: "100%",
-        // height: "100vh",
       }}
     >
       <div className="min-h-auto w-screen flex items-center justify-center">
@@ -119,38 +104,30 @@ function Login() {
                   <>
                     <input
                       type="text"
-                      label="name"
                       placeholder="Name"
                       {...register("name", {
                         required: "Name is required",
                         validate: {
                           matchPattern: (value) =>
-                            /^[a-zA-Z ]{2,30}$/.test(value) ||
-                            "Name must contain only letters and spaces, and be 2-30 characters long",
+                            /^[a-zA-Z ]{2,30}$/.test(value) || "Invalid name",
                         },
                       })}
                       className="w-full p-2 mb-4 border border-gray-300 rounded-lg"
                     />
                     {errors.name && (
-                      <p className="text-red-600 text-sm">
-                        {errors.name.message}
-                      </p>
+                      <p className="text-red-600 text-sm">{errors.name.message}</p>
                     )}
                   </>
                 )}
 
                 <input
                   type="email"
-                  label="email"
                   placeholder="Email"
-                  autoComplete="on"
                   {...register("email", {
                     required: true,
                     validate: {
                       matchPattern: (value) =>
-                        /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(
-                          value
-                        ) || "Email address must be a valid address",
+                        /^\S+@\S+\.\S+$/.test(value) || "Invalid email",
                     },
                   })}
                   className="w-full p-2 mb-4 border border-gray-300 rounded-lg"
@@ -159,44 +136,41 @@ function Login() {
                   <p className="text-red-600 text-sm">{errors.email.message}</p>
                 )}
 
-                <div className=" relative flex">
+                <div className="relative flex">
                   <input
                     type={showPassword ? "text" : "password"}
-                    label="password"
                     placeholder="Password"
-                    autoComplete="on"
                     {...register("password", {
                       required: "Password is required",
                       validate: {
                         matchPattern: (value) =>
-                          /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(
-                            value
-                          ) ||
-                          "Password must be at least 8 characters long and include both letters and numbers",
+                          /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(value) ||
+                          "Weak password",
                       },
                     })}
                     className="w-full p-2 mb-4 border border-gray-300 rounded-lg"
                   />
                   <span
                     onClick={togglePasswordVisibility}
-                    className=" absolute right-1 text-xl p-3 cursor-pointer opacity-65 bg-transparent"
+                    className="absolute right-3 top-3 text-xl cursor-pointer"
+                    role="button"
+                    aria-label="Toggle Password Visibility"
                   >
-                    {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}{" "}
+                    {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
                   </span>
                 </div>
                 {errors.password && (
-                  <p className="text-red-600 text-sm">
-                    {errors.password.message}
-                  </p>
+                  <p className="text-red-600 text-sm">{errors.password.message}</p>
                 )}
 
                 <motion.button
                   whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.6 }}
+                  whileTap={{ scale: 0.96 }}
                   type="submit"
+                  disabled={isSubmitting} // Disable button during submission
                   className="w-full bg-[#6f1bf7] text-white py-2 rounded-lg transition duration-300"
                 >
-                  {signIn ? "Sign In" : "Sign Up"}
+                  {isSubmitting ? "Processing..." : signIn ? "Sign In" : "Sign Up"}
                 </motion.button>
 
                 {error && (
@@ -220,8 +194,8 @@ function Login() {
               </h2>
               <p className="mb-8">
                 {signIn
-                  ? "Enter your personal details and start your journey with us"
-                  : "To keep connected with us please login with your personal info"}
+                  ? "Enter your personal details to join us"
+                  : "Login to stay connected with us"}
               </p>
               <button
                 onClick={toggleForm}
