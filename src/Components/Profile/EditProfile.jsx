@@ -12,7 +12,7 @@ function EditProfile() {
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const userInfo = useSelector((state) => state.register.profileInfo);
+    const userInfo = useSelector((state) => state.register?.profileInfo);
 
     const userName = userInfo?.userName; 
     const [firstName, lastName] = userName ? userName.split(' ') : ['', ''];

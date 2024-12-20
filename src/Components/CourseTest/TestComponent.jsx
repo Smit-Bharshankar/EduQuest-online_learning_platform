@@ -25,6 +25,7 @@ function TestComponent() {
     useEffect(() => {
         const fetchLessons = async () => {
             try {
+              console.log('ccccc id : ' , courseId)
                 const testData = await service.getTestByCourseId(courseId);
                 const courseData = await service.getCourseById(courseId);
                 if (testData && testData.documents.length > 0) {

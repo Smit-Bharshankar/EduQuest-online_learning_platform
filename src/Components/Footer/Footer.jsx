@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link , NavLink} from 'react-router-dom';
 import { whitetextLogo } from '../../assets/imgexp';
 import { FaXTwitter,FaFacebookF,FaInstagram,FaYoutube } from "react-icons/fa6";
 
@@ -12,10 +12,13 @@ const Footer = () => {
           <h1 className="text-lg md:text-2xl font-light text-white/90 mb-2 md:mb-0">
             Try for Free Today
           </h1>
+          <NavLink to={'/login'}>
+
           <button className="flex items-center gap-2 px-6 py-2 bg-gray-900 text-white rounded-full">
             <p>Sign up for Free</p>
             <span>→</span>
           </button>
+          </NavLink>
         </article>
 
         {/* Section - Logo, Socials, Links */}

@@ -14,8 +14,8 @@ function RegistrationForm() {
     const { register, handleSubmit , reset,  formState: { errors } } = useForm();
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const userData = useSelector((state) => state.auth.userData);
-    const { isRegistered, profileInfo } = useSelector((state) => state.register);
+    const userData = useSelector((state) => state.auth?.userData);
+    const { isRegistered, profileInfo } = useSelector((state) => state?.register);
 
     // useEffect(() => {
     //     if (authStatus) {

@@ -21,15 +21,17 @@ import ViewResult from './Components/CourseTest/ViewResult';
 import TestComponent from './Components/CourseTest/TestComponent';
 
 function App() {
-  const [loading, setLoading] = useState(true);
+  const [authLoading, setAuthLoading] = useState(true); // Separate loading state for authentication
+  const [profileLoading, setProfileLoading] = useState(false); // Separate loading state for profile fetching
   const [error, setError] = useState(null); // For error handling
   const dispatch = useDispatch();
   const userEmail = useSelector((state) => state.auth.userData?.email);
 
   // Effect to check if the user is authenticated and fetch current user
   useEffect(() => {
-    authService.getCurrentUser()
-      .then((userData) => {
+    const fetchAuthStatus = async () => {
+      try {
+        const userData = await authService.getCurrentUser();
         if (userData) {
           dispatch(login({ userData }));
           toast.success("Welcome back!");
@@ -37,70 +39,71 @@ function App() {
           dispatch(logout());
           toast.info("You are not logged in.");
         }
-      })
-      .catch((error) => {
-        console.error(error);
+      } catch (error) {
+        console.error("Authentication error:", error);
         toast.error("An error occurred while checking authentication.");
-      })
-      .finally(() => setLoading(false));
-  }, [dispatch]);
+      } finally {
+        setAuthLoading(false);
+      }
+    };
+
+    fetchAuthStatus();
+  }, [dispatch]); // Removed unnecessary dependencies
 
   // Effect to fetch user details and profile picture
   useEffect(() => {
+    if (!userEmail) return; // Early exit if userEmail is not available
+
     const getUserDetails = async () => {
+      setProfileLoading(true); // Start profile-specific loading
       try {
-        if (userEmail) {
-          const userId = await service.findUserByEmail(userEmail);
-          const userData = await service.findUserById(userId);
+        const userId = await service.findUserByEmail(userEmail);
+        if (!userId) throw new Error("User not found");
 
-          if (userData) {
-            const { $id, userID, userName, email, location, dob: birthDate, contact, profilePicture } = userData;
+        const userData = await service.findUserById(userId);
+        if (!userData) throw new Error("User data could not be retrieved");
 
-            console.log("Profile Picture ID:", profilePicture);
+        const { $id, userID, userName, email, location, dob: birthDate, contact, profilePicture } = userData;
 
-            if (!profilePicture) {
-              console.log("Profile picture is missing in user data");
-            } else {
-              try {
-                const profilePicUrl = await service.getProfilePic(profilePicture); // Await here
-                if (!profilePicUrl) {
-                  throw new Error('Profile Picture not found');
-                }
-                dispatch(setProfilePicUrl(profilePicUrl)); // Dispatch profile picture URL to Redux store
-              } catch (error) {
-                console.error('Error while fetching profile picture:', error);
-                setError(error.message || 'Error fetching profile picture');
-              }
-            }
-
-            // Dispatch user details to Redux store
-            dispatch(
-              userRegister({
-                  profileInfo: {
-                  $id,
-                  userID,
-                  userName,
-                  email,
-                  location,
-                  dob: birthDate,
-                  contact,
-                  profilePicture, // Pass the profile picture ID to Redux
-                },
-              })
-            );
+        // Fetch profile picture if available
+        if (profilePicture) {
+          try {
+            const profilePicUrl = await service.getProfilePic(profilePicture);
+            if (!profilePicUrl) throw new Error("Profile picture could not be fetched");
+            dispatch(setProfilePicUrl(profilePicUrl));
+          } catch (profileError) {
+            console.error("Profile picture error:", profileError);
           }
         }
+
+        // Dispatch user details
+        dispatch(
+          userRegister({
+            profileInfo: {
+              $id,
+              userID,
+              userName,
+              email,
+              location,
+              dob: birthDate,
+              contact,
+              profilePicture,
+            },
+          })
+        );
       } catch (error) {
         console.error("Failed to fetch user details:", error);
         setError('Failed to fetch user details');
+      } finally {
+        setProfileLoading(false);
       }
     };
 
     getUserDetails();
-  }, [userEmail, dispatch]); // Include necessary dependencies
+  }, [userEmail, dispatch]);
 
-  // Loading indicator while checking authentication
-  if (loading) {
+  // Separate loading indicators for authentication and profile fetching
+  if (authLoading || profileLoading) {
     return (
       <div className="flex flex-row w-full h-screen items-center justify-center gap-2">
         <div className="w-4 h-4 rounded-full bg-blue-700 animate-bounce"></div>
